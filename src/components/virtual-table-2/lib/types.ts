@@ -1,3 +1,4 @@
+import type { Virtualizer } from '@tanstack/react-virtual';
 import { FILTER_ADVANCE_CONFIG } from './constants';
 
 export interface IVirtualTable<TData> extends ITableUIProperty {
@@ -34,6 +35,42 @@ export interface IExpandedRowData<T> {
 export interface IFlattenedData<T> {
   type: string;
   item: T;
+}
+
+interface IVirtualBodyBase<TData> {
+  data?: TData;
+  columns: IColumn<TData>[];
+  expandedContentWidth?: number;
+  renderExpandedRow?: (item: TData) => React.ReactNode;
+}
+
+interface IExpandable<TData> {
+  onClickExpandedRow?: (item: TData) => void;
+}
+
+export interface IVirtualTableBody<TData> extends IVirtualBodyBase<TData>, IExpandable<TData> {
+  headerHeight: number;
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  columnVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  flattenedData: IFlattenedData<TData>[];
+}
+
+export interface IVirtualTableRow<TData> extends IVirtualBodyBase<TData>, IExpandable<TData> {
+  rowType: 'row' | 'expanded';
+  virtualRow: { size: number; start: number };
+  virtualColumns: { index: number; start: number; size: number }[];
+}
+
+export interface IVirtualTableCell<TData> extends IExpandable<TData> {
+  column?: IColumn<TData>;
+  data: TData;
+  width?: number;
+  left?: number;
+  isExpanded?: boolean;
+  colSpan?: number;
+  expandedContentWidth?: number;
+  renderExpandedRow?: (item: TData) => React.ReactNode;
+  onClickExpand?: () => void;
 }
 
 export interface ITableFilter {

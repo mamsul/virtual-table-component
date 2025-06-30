@@ -23,7 +23,7 @@ function VirtualFilterSearch(props: IVirtualFilterSearchProps) {
   return (
     <InputSearch
       id={'filter-search-' + columnKey}
-      className="!w-full"
+      className='!w-full bg-white'
       ref={inputRef}
       onKeyDown={handleEnterSearch}
       onRemoveSearch={handleClickResetSearch}

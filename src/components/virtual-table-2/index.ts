@@ -1,2 +1,2 @@
-export { default } from './virtual-table-2';
+export { default as VirtualTable2 } from './virtual-table';
 export type { IColumn } from './lib/types';

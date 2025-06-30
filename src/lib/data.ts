@@ -30,14 +30,14 @@ export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
 
 export const columns: IColumn<IUser>[] = [
   { key: 'expand', header: '', width: 40 },
-  { key: 'id', header: 'ID', width: 50 },
+  { key: 'id', header: 'ID', width: 120 },
   { key: 'name', header: 'Name' },
   { key: 'email', header: 'Email', width: 200 },
-  { key: 'age', header: 'Age', width: 100 },
-  { key: 'gender', header: 'Gender', width: 100 },
+  { key: 'age', header: 'Age', width: 120 },
+  { key: 'gender', header: 'Gender', width: 120 },
   { key: 'phone', header: 'Phone', width: 200 },
   { key: 'address', header: 'Address', width: 200 },
-  { key: 'city', header: 'City', width: 100 },
-  { key: 'country', header: 'Country', width: 100 },
+  { key: 'city', header: 'City', width: 140 },
+  { key: 'country', header: 'Country', width: 140 },
   { key: 'company', header: 'Company' },
 ];

@@ -1,4 +1,4 @@
-import VirtualTable2 from './components/virtual-table-2';
+import { VirtualTable2 } from './components/virtual-table-2';
 import { columns, dummyData } from './lib/data';
 
 export default function App() {
