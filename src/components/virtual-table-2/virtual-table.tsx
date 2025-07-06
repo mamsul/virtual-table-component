@@ -3,18 +3,19 @@ import { useRef, useState, useEffect } from 'react';
 import clsx from 'clsx';
 
 import { DEFAULT_SIZE, type IVirtualTable, type TSortOrder } from './lib';
-import { useFlattenedData } from './hooks';
+import {
+  useFilterAdvance,
+  useFilterSearch,
+  useFilterSelection,
+  useFilterSort,
+  useFlattenedData,
+} from './hooks';
 import { TableProvider } from './context/table-context';
 import VirtualTableHeader from './virtual-table-header';
 import VirtualTableBody from './virtual-table-body';
 import './lib/style.css';
 
-export default function VirtualTable<TData>(
-  virtualTableProps: IVirtualTable<TData> & {
-    onScroll?: (scrollTop: number) => void;
-    getScrollElement?: (el: HTMLDivElement | null) => void;
-  },
-) {
+export default function VirtualTable<TData>(virtualTableProps: IVirtualTable<TData>) {
   const {
     data = [],
     columns,
@@ -31,12 +32,37 @@ export default function VirtualTable<TData>(
   const scrollElementRef = useRef<HTMLDivElement>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string | number>>(new Set());
 
-  const flattenedData = useFlattenedData(data, expandedRows, getRowKey);
+  const { sortedData, sortKey, sortBy, handleSort } = useFilterSort({
+    data,
+    onChangeSort: () => {},
+  });
+
+  const { searchedData, activeSearch, updateSearch, resetSearch } = useFilterSearch({
+    data: sortedData,
+    isResetFilter: false,
+    useServerSearch: false,
+    onChangeSearch: () => {},
+  });
+
+  const { filteredData, activeFilters, updateFilter, resetFilter } = useFilterSelection({
+    data: searchedData,
+    isResetFilter: false,
+    useServerFilter: false,
+    onChangeFilter: () => {},
+  });
+
+  const { filteredAdvanceData, activeAdvanceFilters, applyAdvanceFilter, resetAdvanceFilter } =
+    useFilterAdvance({
+      data: filteredData,
+      isResetFilter: false,
+      useServerAdvanceFilter: false,
+      onChangeAdvanceFilter: () => {},
+    });
+
+  const flattenedData = useFlattenedData(filteredAdvanceData, expandedRows, getRowKey);
 
   useEffect(() => {
-    if (getScrollElement) {
-      getScrollElement(scrollElementRef.current);
-    }
+    if (getScrollElement) getScrollElement(scrollElementRef.current);
   }, [getScrollElement]);
 
   // Row virtualizer
@@ -88,21 +114,21 @@ export default function VirtualTable<TData>(
   const tableProviderValue = {
     headerHeight: headerHeight || DEFAULT_SIZE.HEADER_HEIGTH,
     handleResizeColumn: () => {},
-    sort: { sortKey: '', sortBy: 'unset' as TSortOrder, handleSort: () => {} },
+    sort: { sortKey, sortBy: sortBy as TSortOrder, handleSort },
     filterSearch: {
-      activeSearch: {},
-      handleResetSearch: () => {},
-      handleApplySearch: () => {},
+      activeSearch,
+      handleResetSearch: resetSearch,
+      handleApplySearch: updateSearch,
     },
     filterSelection: {
-      activeFilters: {},
-      handleResetFilter: () => {},
-      handleApplyFilter: () => {},
+      activeFilters,
+      handleResetFilter: resetFilter,
+      handleApplyFilter: updateFilter,
     },
     filterAdvance: {
-      activeFilters: {},
-      handleResetFilter: () => {},
-      handleApplyFilter: () => {},
+      activeFilters: activeAdvanceFilters,
+      handleResetFilter: resetAdvanceFilter,
+      handleApplyFilter: applyAdvanceFilter,
     },
   };
 

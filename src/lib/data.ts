@@ -30,7 +30,7 @@ export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
 
 export const columns: IColumn<IUser>[] = [
   { key: 'expand', header: '', width: 40 },
-  { key: 'id', header: 'ID', width: 120 },
+  { key: 'id', header: 'ID' },
   { key: 'name', header: 'Name' },
   { key: 'email', header: 'Email', width: 200 },
   { key: 'age', header: 'Age', width: 120 },

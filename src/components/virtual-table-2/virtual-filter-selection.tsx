@@ -15,8 +15,9 @@ interface VirtualFilterSelectionProps {
 }
 
 interface SelectionListProps extends Pick<VirtualFilterSelectionProps, 'options' | 'columnKey'> {
-  scrollRef: React.RefObject<HTMLDivElement>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
+  isEmptyOptions?: boolean;
   isCheked: (value: string) => boolean;
   onCheckboxChange: (value: string) => void;
 }
@@ -74,37 +75,42 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
 
   const onCheckboxChange = (value: string) => {
     setSelectedOptions((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value],
     );
   };
 
+  const isEmptyOpts = options.length < 1;
+
   return (
-    <div ref={filterRef} className="relative">
+    <div ref={filterRef} className='relative'>
       <Icon
-        name="filterMultiple"
+        name='filterMultiple'
         className={clsx(
           'shrink-0 w-3.5 text-gray-500 hover:text-gray-900 cursor-pointer',
-          showFilterCard && '!text-gray-900'
+          showFilterCard && '!text-gray-900',
         )}
         onClick={() => setShowFilterCard((prev) => !prev)}
       />
 
       {showFilterCard && (
         <FilterCard>
-          <div className="px-1.5 pt-1.5">
-            <InputSearch
-              id={`filter-selection-search-${columnKey}`}
-              value={searchQuery}
-              disabled={!filteredOptions.length}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          {!isEmptyOpts && (
+            <div className='px-1.5 pt-1.5'>
+              <InputSearch
+                id={`filter-selection-search-${columnKey}`}
+                value={searchQuery}
+                disabled={!filteredOptions.length}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          )}
 
           <SelectionList
             scrollRef={filterScrollRef}
             rowVirtualizer={rowVirtualizer}
             options={filteredOptions}
             columnKey={columnKey}
+            isEmptyOptions={isEmptyOpts}
             isCheked={selectedOptions.includes}
             onCheckboxChange={onCheckboxChange}
           />
@@ -119,20 +125,27 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
 // ======================= SELECTION LIST COMPONENT =======================
 // ========================================================================
 const SelectionList = (props: SelectionListProps) => {
-  const { options, columnKey, rowVirtualizer, isCheked, onCheckboxChange, scrollRef } = props;
-  const isEmptyOptions = rowVirtualizer.getVirtualItems().length === 0;
+  const {
+    options,
+    columnKey,
+    rowVirtualizer,
+    isCheked,
+    isEmptyOptions,
+    onCheckboxChange,
+    scrollRef,
+  } = props;
 
   return (
     <div
       ref={scrollRef}
       className={clsx(
         'relative overflow-auto h-40 my-1.5 mx-1.5 filter-scrollbar',
-        isEmptyOptions && 'h-16'
+        isEmptyOptions && '!h-16',
       )}
     >
       {isEmptyOptions ? (
-        <div className="size-full flex justify-center items-center">
-          <span className="text-gray-500 text-xs">No data available!</span>
+        <div className='size-full flex justify-center items-center'>
+          <span className='text-gray-400 text-xs'>No data available!</span>
         </div>
       ) : (
         rowVirtualizer.getVirtualItems().map((virtualRow) => {

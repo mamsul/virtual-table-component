@@ -78,20 +78,24 @@ export default function VirtualFilterAdvance(props: VirtualFilterAdvanceProps) {
 
       {filterCard.show && (
         <FilterCard>
-          <div className='p-1.5 flex flex-col space-y-1'>
+          <div className='p-1.5 w-full flex flex-col items-start space-y-1'>
             <span className='text-xs text-gray-800'>Filter dengan</span>
             <Dropdown
               options={CONFIG_OPTIONS}
               value={filterValue.config}
               onSelect={handleConfigChange}
             />
-            <InputSearch
-              id={`filter-advance-value-${columnKey}`}
-              disabled={filterValue.config === 'None'}
-              value={filterValue.value}
-              onChange={(e) => setFilterValue((prev) => ({ ...prev, value: e.target.value }))}
-            />
+
+            {filterValue.config !== 'None' && (
+              <InputSearch
+                id={`filter-advance-value-${columnKey}`}
+                disabled={filterValue.config === 'None'}
+                value={filterValue.value}
+                onChange={(e) => setFilterValue((prev) => ({ ...prev, value: e.target.value }))}
+              />
+            )}
           </div>
+
           <FilterAction onApply={handleApplyFilter} onReset={handleResetFilter} />
         </FilterCard>
       )}

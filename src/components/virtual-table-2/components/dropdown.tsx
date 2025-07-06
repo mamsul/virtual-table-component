@@ -1,4 +1,4 @@
-import { Dispatch, useState } from 'react';
+import { type Dispatch, useState } from 'react';
 import Icon from '../icons';
 import clsx from 'clsx';
 
@@ -23,23 +23,23 @@ export default function Dropdown(props: DropdownProps) {
   };
 
   return (
-    <div className="relative">
+    <div className='relative w-full'>
       <DropdownBox value={value || ''} isOpen={showDropdown} onToggle={setShowDropdown} />
 
       {showDropdown && (
-        <div className="absolute top-full mt-1 w-full border border-gray-50 shadow rounded-sm bg-white z-40">
-          <div className="flex flex-col">
+        <div className='absolute top-full mt-1 w-full border border-gray-50 shadow rounded-sm bg-white z-40'>
+          <div className='flex flex-col items-start'>
             {!options.length ? (
-              <div className="py-5 flex justify-center items-center">
-                <span className="text-gray-500 text-xs">No data available!</span>
+              <div className='py-5 flex justify-center items-center'>
+                <span className='text-gray-500 text-xs'>No data available!</span>
               </div>
             ) : (
               options.map((option) => (
                 <div
                   key={option}
                   className={clsx(
-                    'px-1.5 py-1 hover:bg-knitto-blue-40 cursor-pointer',
-                    value === option && 'bg-knitto-blue-40'
+                    'px-1.5 py-1 hover:bg-blue-50 cursor-pointer w-full text-start',
+                    value === option && 'bg-blue-100',
                   )}
                   onClick={() => handleSelectOption(option)}
                 >
@@ -59,15 +59,15 @@ const DropdownBox = (props: DropdownBoxProps) => {
 
   return (
     <div
-      className="border border-gray-200 rounded h-[1.625rem] pl-1.5 w-full flex justify-between items-center hover:bg-gray-50 cursor-pointer"
+      className='border border-gray-200 rounded h-[1.625rem] pl-1.5 w-full flex justify-between items-center hover:bg-gray-50 cursor-pointer'
       onClick={() => onToggle((prev) => !prev)}
     >
-      <span className="text-xs font-normal">{value}</span>
+      <span className='text-xs font-normal'>{value}</span>
       <Icon
-        name="chevron"
+        name='chevron'
         className={clsx(
           'w-5 text-gray-500 me-0.5 transition-all duration-100',
-          isOpen && 'rotate-180'
+          isOpen && 'rotate-180',
         )}
       />
     </div>

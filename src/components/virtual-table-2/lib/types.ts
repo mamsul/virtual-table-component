@@ -8,6 +8,8 @@ export interface IVirtualTable<TData> extends ITableUIProperty {
   getRowKey: (item: TData) => string | number;
   renderExpandedRow?: (item: TData) => React.ReactNode;
   onRowExpand?: (item: TData) => void;
+  onScroll?: (scrollTop: number) => void;
+  getScrollElement?: (el: HTMLDivElement | null) => void;
 }
 
 interface ITableUIProperty {
