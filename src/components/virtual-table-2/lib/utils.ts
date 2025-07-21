@@ -17,3 +17,13 @@ export function calculateFixedCardPosition(rect: DOMRect, cardHeight: number = 2
 export function getObjKeyByValue(object: Record<string, string | number>, value: string | number) {
   return Object.keys(object).find((key) => object[key] === value);
 }
+
+/**
+ * Menghitung lebar scrollbar pada elemen dengan ref yang diberikan.
+ * dengan cara mengurangi offsetWidth dengan clientWidth.
+ * Jika elemen tidak ada, kembalikan 0.
+ */
+export function getScrollbarWidth(ref: React.RefObject<HTMLDivElement | null>) {
+  if (!ref.current) return 0;
+  return ref.current.offsetWidth - ref.current.clientWidth;
+}
