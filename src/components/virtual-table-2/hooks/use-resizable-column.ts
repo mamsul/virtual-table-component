@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ResizableColumnProps {
   currentWidth?: number;
@@ -11,10 +11,14 @@ interface ResizableColumnProps {
 export default function useResizableColumn(props: ResizableColumnProps) {
   const { currentWidth, onMouseUp } = props;
 
-  const boxRef = useRef<HTMLDivElement | null>(null);
+  const boxRef = useRef<HTMLTableCellElement | null>(null);
   const [resizableWidth, setResizableWidth] = useState<number>(Number(currentWidth));
   const [isTempResize, setIsTempResize] = useState<boolean>(false);
   const resizableWidthRef = useRef(resizableWidth);
+
+  useEffect(() => {
+    setResizableWidth(Number(currentWidth));
+  }, [currentWidth]);
 
   const handleMouseDown = () => {
     if (!boxRef.current) return;
