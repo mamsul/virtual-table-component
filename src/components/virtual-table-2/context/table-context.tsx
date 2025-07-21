@@ -7,12 +7,17 @@ import type { ITableFilter } from '../lib';
  * ===============================================
  */
 interface ITableContext {
+  scrollbarWidth: number;
   headerHeight: number;
+  outerTableheight: number;
+  outerTableWidth: number;
+  isFilterVisible: boolean;
   sort: ITableFilter['sort'];
   filterSearch: ITableFilter['search'];
   filterSelection: ITableFilter['filterSelection'];
   filterAdvance: ITableFilter['filterAdvance'];
-  handleResizeColumn: (key: string, newWidth: number) => void;
+  handleToggleFilterVisibility: () => void;
+  handleResizeColumn: (key: string, columnIndex: number, newWidth: number) => void;
 }
 
 const TableContext = createContext<ITableContext | undefined>(undefined);
@@ -30,23 +35,41 @@ export const TableProvider = (props: TableProviderProps) => {
   const {
     children,
     sort,
+    scrollbarWidth,
+    outerTableheight,
+    outerTableWidth,
+    headerHeight,
+    isFilterVisible,
     filterSearch,
     filterSelection,
     filterAdvance,
     handleResizeColumn,
-    headerHeight,
+    handleToggleFilterVisibility,
   } = props;
 
   const contextValue = React.useMemo(
     (): ITableContext => ({
       sort,
+      scrollbarWidth,
+      outerTableheight,
+      outerTableWidth,
+      isFilterVisible,
       filterSearch,
       headerHeight,
-      handleResizeColumn,
       filterAdvance,
       filterSelection,
+      handleResizeColumn,
+      handleToggleFilterVisibility,
     }),
-    [sort, filterSearch, filterSelection, filterAdvance, headerHeight],
+    [
+      sort,
+      isFilterVisible,
+      outerTableWidth,
+      filterSearch,
+      filterSelection,
+      filterAdvance,
+      headerHeight,
+    ],
   );
 
   return <TableContext.Provider value={contextValue}>{children}</TableContext.Provider>;

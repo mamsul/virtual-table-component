@@ -1,3 +1,4 @@
+import { useTableContext } from './context/table-context';
 import Icon from './icons';
 import { DEFAULT_SIZE, type IVirtualTableCell } from './lib';
 
@@ -10,9 +11,11 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
     colSpan,
     onClickExpand,
     isExpanded = false,
-    expandedContentWidth,
     renderExpandedRow,
   } = props;
+
+  const { outerTableWidth, scrollbarWidth } = useTableContext();
+  const expandedContentWidth = outerTableWidth - scrollbarWidth;
 
   if (!isExpanded) {
     return (

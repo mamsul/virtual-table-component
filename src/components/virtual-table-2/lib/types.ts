@@ -22,6 +22,7 @@ export interface IColumn<TData> {
   key: keyof TData | 'expand';
   header: string;
   width?: number;
+  noStretch?: boolean;
   filterOptions?: string[];
   render?: (item: TData) => React.ReactNode;
 }
@@ -42,7 +43,6 @@ export interface IFlattenedData<T> {
 interface IVirtualBodyBase<TData> {
   data?: TData;
   columns: IColumn<TData>[];
-  expandedContentWidth?: number;
   renderExpandedRow?: (item: TData) => React.ReactNode;
 }
 
@@ -70,7 +70,6 @@ export interface IVirtualTableCell<TData> extends IExpandable<TData> {
   left?: number;
   isExpanded?: boolean;
   colSpan?: number;
-  expandedContentWidth?: number;
   renderExpandedRow?: (item: TData) => React.ReactNode;
   onClickExpand?: () => void;
 }
@@ -80,6 +79,7 @@ export interface ITableFilter {
     sortKey: string | null;
     sortBy: TSortOrder;
     handleSort: (key: string) => void;
+    handleSpecificSort: (key: string, order: TSortOrder) => void;
   };
   search: {
     activeSearch: Record<string, string>;

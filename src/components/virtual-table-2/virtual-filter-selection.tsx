@@ -145,7 +145,7 @@ const SelectionList = (props: SelectionListProps) => {
     >
       {isEmptyOptions ? (
         <div className='size-full flex justify-center items-center'>
-          <span className='text-gray-400 text-xs'>No data available!</span>
+          <span className='text-gray-400 text-xs font-normal'>No data available!</span>
         </div>
       ) : (
         rowVirtualizer.getVirtualItems().map((virtualRow) => {

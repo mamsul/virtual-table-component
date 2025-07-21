@@ -31,14 +31,14 @@ export default function Dropdown(props: DropdownProps) {
           <div className='flex flex-col items-start'>
             {!options.length ? (
               <div className='py-5 flex justify-center items-center'>
-                <span className='text-gray-500 text-xs'>No data available!</span>
+                <span className='text-gray-500 text-xs font-normal'>No data available!</span>
               </div>
             ) : (
               options.map((option) => (
                 <div
                   key={option}
                   className={clsx(
-                    'px-1.5 py-1 hover:bg-blue-50 cursor-pointer w-full text-start',
+                    'px-1.5 py-1 hover:bg-blue-50 cursor-pointer w-full text-start font-normal',
                     value === option && 'bg-blue-100',
                   )}
                   onClick={() => handleSelectOption(option)}

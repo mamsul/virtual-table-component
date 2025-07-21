@@ -8,7 +8,6 @@ export default function VirtualTableRow<TData>(props: IVirtualTableRow<TData>) {
     virtualRow,
     virtualColumns,
     columns,
-    expandedContentWidth,
     onClickExpandedRow,
     renderExpandedRow,
   } = props;
@@ -42,12 +41,7 @@ export default function VirtualTableRow<TData>(props: IVirtualTableRow<TData>) {
       className='absolute top-0 left-0 w-full'
       style={{ transform: `translateY(${virtualRow.start}px)` }}
     >
-      <VirtualTableCell
-        isExpanded
-        data={data as TData}
-        expandedContentWidth={expandedContentWidth}
-        renderExpandedRow={renderExpandedRow}
-      />
+      <VirtualTableCell isExpanded data={data as TData} renderExpandedRow={renderExpandedRow} />
     </tr>
   );
 }

@@ -1,6 +1,6 @@
 import { useRef, useCallback, useState } from 'react';
-import VirtualTable2 from '../components/virtual-table-2';
 import { columns, dummyData } from '../lib/data';
+import { VirtualTable2 } from '../components/virtual-table-2';
 
 export default function SyncScroll() {
   const otherPaneRef = useRef<HTMLDivElement>(null);
