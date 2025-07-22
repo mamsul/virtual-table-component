@@ -1,4 +1,5 @@
 import type { IIconProps } from '../lib';
+import IcCheck from './ic-check';
 import IcChevron from './ic-chevon';
 import IcClose from './ic-close';
 import IcColumn from './ic-column';
@@ -23,6 +24,7 @@ export const icons = {
   filterMultiple: (prop: IIconProps) => <IcFilterMultiple {...prop} />,
   search: (prop: IIconProps) => <IcSearch {...prop} />,
   menu: (prop: IIconProps) => <IcMenu {...prop} />,
+  check: (prop: IIconProps) => <IcCheck {...prop} />,
 };
 
 type IconName = keyof typeof icons;

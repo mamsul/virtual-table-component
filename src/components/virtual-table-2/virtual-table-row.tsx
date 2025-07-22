@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import type { IVirtualTableRow } from './lib';
 import VirtualTableCell from './virtual-table-cell';
 
-export default function VirtualTableRow<TData>(props: IVirtualTableRow<TData>) {
+const VirtualTableRow = <TData,>(props: IVirtualTableRow<TData>) => {
   const {
     rowType,
     data,
@@ -44,4 +45,6 @@ export default function VirtualTableRow<TData>(props: IVirtualTableRow<TData>) {
       <VirtualTableCell isExpanded data={data as TData} renderExpandedRow={renderExpandedRow} />
     </tr>
   );
-}
+};
+
+export default memo(VirtualTableRow) as typeof VirtualTableRow;

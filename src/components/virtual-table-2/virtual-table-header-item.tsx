@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import clsx from 'clsx';
 import { DEFAULT_SIZE, type IColumn, type ITableFilter } from './lib';
 import VirtualFilterAdvance from './virtual-filter-advance';
@@ -36,7 +37,7 @@ interface HeaderFilterProps {
   };
 }
 
-export default function VirtualTableHeaderItem<TData>(props: IVirtualTableHeaderItem<TData>) {
+const VirtualTableHeaderItem = <TData,>(props: IVirtualTableHeaderItem<TData>) => {
   const { column, virtualColumn, columnIndex } = props;
   const {
     outerTableheight,
@@ -104,7 +105,9 @@ export default function VirtualTableHeaderItem<TData>(props: IVirtualTableHeader
       </div>
     </th>
   );
-}
+};
+
+export default memo(VirtualTableHeaderItem) as typeof VirtualTableHeaderItem;
 
 // ======================= HEADER CAPTION COMPONENT =======================
 // ========================================================================

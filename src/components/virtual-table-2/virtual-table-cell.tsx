@@ -1,6 +1,6 @@
 import { useTableContext } from './context/table-context';
 import Icon from './icons';
-import { DEFAULT_SIZE, type IVirtualTableCell } from './lib';
+import { type IVirtualTableCell } from './lib';
 
 export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>) {
   const {
@@ -14,8 +14,7 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
     renderExpandedRow,
   } = props;
 
-  const { outerTableWidth, scrollbarWidth } = useTableContext();
-  const expandedContentWidth = outerTableWidth - scrollbarWidth;
+  const { outerTableWidth, scrollbarWidth, expandedContentHeight } = useTableContext();
 
   if (!isExpanded) {
     return (
@@ -48,7 +47,7 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
 
   return (
     <td colSpan={colSpan} className='border-b border-gray-200'>
-      <div style={{ height: DEFAULT_SIZE.EXPANDED_ROW_HEIGHT, width: expandedContentWidth }}>
+      <div style={{ height: expandedContentHeight, width: outerTableWidth - scrollbarWidth }}>
         {renderExpandedRow?.(data)}
       </div>
     </td>

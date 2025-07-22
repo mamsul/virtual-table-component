@@ -27,6 +27,12 @@ export interface IColumn<TData> {
   render?: (item: TData) => React.ReactNode;
 }
 
+export interface IColumnVisibilityListItem {
+  key: string;
+  caption: string;
+  checked: boolean;
+}
+
 export interface IExpandedRowData<T> {
   [key: string | number]: {
     data: T;
