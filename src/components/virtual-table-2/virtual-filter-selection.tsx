@@ -51,7 +51,7 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
     return filteringOptions(options || [], searchQuery);
   }, [options, searchQuery]);
 
-  useClickOutside(filterRef, () => {
+  useClickOutside([filterRef], () => {
     if (showFilterCard) setShowFilterCard(false);
   });
 

@@ -28,20 +28,14 @@ export function getScrollbarWidth(ref: React.RefObject<HTMLDivElement | null>) {
   return ref.current.offsetWidth - ref.current.clientWidth;
 }
 
-/**
- * Menghitung overflow element terhadap viewport pada setiap sisi.
- * @param top posisi atas element (px)
- * @param left posisi kiri element (px)
- * @param width lebar element (px)
- * @param height tinggi element (px)
- * @returns object { top, right, bottom, left } (nilai >0 berarti overflow, <=0 berarti tidak overflow)
- */
 export function calculateElementOverflow(rect: DOMRect, cardWidth: number, cardHeight: number) {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  const right = viewportWidth - (viewportWidth - (rect.left + cardWidth));
-  const bottom = viewportHeight - (rect.top + cardHeight);
+  const right = viewportWidth - (rect.left + cardWidth); // < 0 berarti overflow kanan
+  const bottom = viewportHeight - (rect.top + cardHeight); // < 0 berarti overflow bawah
+  const left = rect.left; // < 0 berarti overflow kiri
+  const top = rect.top; // < 0 berarti overflow atas
 
-  return { right, bottom };
+  return { right, bottom, left, top };
 }

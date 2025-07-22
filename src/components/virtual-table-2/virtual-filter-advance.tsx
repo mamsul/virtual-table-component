@@ -46,7 +46,7 @@ export default function VirtualFilterAdvance(props: VirtualFilterAdvanceProps) {
   const [filterCard, setFilterCard] = useState<IFilterCard>(DEFAULT_FILTER_CARD);
   const [filterValue, setFilterValue] = useState<IFilterValue>(DEFAULT_FILTER_VALUE);
 
-  useClickOutside(filterRef, () => filterCard.show && setFilterCard(DEFAULT_FILTER_CARD));
+  useClickOutside([filterRef], () => filterCard.show && setFilterCard(DEFAULT_FILTER_CARD));
 
   const handleConfigChange = (config: string) => {
     setFilterValue((prev) => ({ ...prev, config }));

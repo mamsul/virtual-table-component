@@ -74,7 +74,7 @@ const VirtualTableHeaderItem = <TData,>(props: IVirtualTableHeaderItem<TData>) =
         height: calculatedHeaderHeight,
         width: `${virtualColumn.size}px`,
         transform: `translateX(${virtualColumn.start}px)`,
-        zIndex: 10000 - columnIndex,
+        zIndex: 555 - columnIndex,
       }}
     >
       <div className='size-full relative flex flex-col'>
@@ -136,7 +136,6 @@ const HeaderCaption = (captionProps: HeaderCaptionProps) => {
           />
 
           <VirtualColumnAction
-            columnKey={columnKey}
             onClickSort={(sortBy) => handleSpecificSort(columnKey, sortBy)}
             onToggleFilterVisibility={onToggleFilterVisibility}
           />
