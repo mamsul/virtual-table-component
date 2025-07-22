@@ -1,20 +1,25 @@
 import clsx from 'clsx';
-import type { HTMLAttributes } from 'react';
+import { forwardRef, type HTMLAttributes } from 'react';
 
 interface FilterCardProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export default function FilterCard({ children, className, ...propRest }: FilterCardProps) {
-  return (
-    <div
-      className={clsx(
-        'absolute top-full right-0 mt-1 w-40 bg-white shadow z-40 rounded-sm border border-gray-50',
-        className,
-      )}
-      {...propRest}
-    >
-      {children}
-    </div>
-  );
-}
+const FilterCard = forwardRef<HTMLDivElement, FilterCardProps>(
+  ({ children, className, ...propRest }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={clsx(
+          'absolute top-full right-0 mt-1 bg-white shadow-md z-40 rounded-sm border border-gray-50 w-40 text-xs',
+          className,
+        )}
+        {...propRest}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+export default FilterCard;
