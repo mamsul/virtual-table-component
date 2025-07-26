@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { DEFAULT_SIZE, type IColumn } from '../lib';
+import { DEFAULT_SIZE, type IHeader } from '../lib';
 
 interface IStretchColumns<TData> {
-  columns: IColumn<TData>[];
+  columns: IHeader<TData>[];
   outerTableWidth: number;
   scrollbarWidth: number;
 }

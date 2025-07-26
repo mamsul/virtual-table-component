@@ -1,4 +1,4 @@
-import VirtualTable2, { type IColumn } from './components/virtual-table-2';
+import VirtualTable2, { type IColumn } from './components/virtual-table';
 
 interface IUser {
   id: number;

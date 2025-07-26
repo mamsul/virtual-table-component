@@ -1,15 +1,53 @@
 import type { Virtualizer } from '@tanstack/react-virtual';
 import { FILTER_ADVANCE_CONFIG } from './constants';
 
+export interface ITableContext {
+  isFilterVisible: boolean;
+  headers: IHeader<unknown>[];
+  flattenedData: IFlattenedData<unknown>[];
+  headerHeight: number;
+  outerTableheight: number;
+  outerTableWidth: number;
+  scrollbarWidth: number;
+  expandedContentHeight: number;
+  expandedRows: Set<string | number>;
+  selectedRow: unknown;
+  columnVisibilityList: IColumnVisibilityListItem[];
+  visibleColumns: string[];
+  sort: ITableFilter['sort'];
+  filterSearch: ITableFilter['search'];
+  filterSelection: ITableFilter['filterSelection'];
+  filterAdvance: ITableFilter['filterAdvance'];
+  checkboxSelectionRow?: {
+    selectedRows: Set<string | number>;
+    handleSelectCheckboxRow: (item: unknown) => void;
+    handleSelectAllCheckboxRow: () => void;
+    handleUnselectAllCheckboxRow: () => void;
+  };
+  getRowKey: (item: unknown) => string | number;
+  renderExpandedRow?: (item: unknown) => React.ReactNode;
+  handleClickRow?: (data: unknown) => void;
+  handleDoubleClickRow?: (data: unknown) => void;
+  handleRightClickRow?: (data: unknown, position: { x: number; y: number }) => void;
+  handleClickExpandRow: (item: unknown) => void;
+  handleToggleFilterVisibility: () => void;
+  handleResizeColumn: (key: string, columnIndex: number, newWidth: number) => void;
+  handleToggleColumnVisibility: (key: string) => void;
+}
+
 export interface IVirtualTable<TData> extends ITableUIProperty {
-  columns: IColumn<TData>[];
+  headers: IHeader<TData>[];
   data: TData[];
   classNameOuterTable?: string;
   getRowKey: (item: TData) => string | number;
+  getScrollElement?: (el: HTMLDivElement | null) => void;
   renderExpandedRow?: (item: TData) => React.ReactNode;
   onRowExpand?: (item: TData) => void;
   onScroll?: (scrollTop: number) => void;
-  getScrollElement?: (el: HTMLDivElement | null) => void;
+  onClickRow?: (item: TData) => void;
+  onDoubleClickRow?: (item: TData) => void;
+  onRightClickRow?: (item: TData, position: { x: number; y: number }) => void;
+  onSelectCheckboxRow?: (selectedRows: (string | number)[]) => void;
 }
 
 interface ITableUIProperty {
@@ -18,12 +56,13 @@ interface ITableUIProperty {
   hideHeader?: boolean;
 }
 
-export interface IColumn<TData> {
-  key: keyof TData | 'expand';
-  header: string;
+export interface IHeader<TData> {
+  key: keyof TData | 'expand' | 'action' | 'row-selection';
+  caption: string;
   width?: number;
   noStretch?: boolean;
   filterOptions?: string[];
+  sticky?: 'left' | 'right';
   render?: (item: TData) => React.ReactNode;
 }
 
@@ -46,38 +85,31 @@ export interface IFlattenedData<T> {
   item: T;
 }
 
-interface IVirtualBodyBase<TData> {
+export interface IVirtualTableBody<TData> {
   data?: TData;
-  columns: IColumn<TData>[];
-  renderExpandedRow?: (item: TData) => React.ReactNode;
-}
-
-interface IExpandable<TData> {
-  onClickExpandedRow?: (item: TData) => void;
-}
-
-export interface IVirtualTableBody<TData> extends IVirtualBodyBase<TData>, IExpandable<TData> {
+  headers: IHeader<TData>[];
   headerHeight: number;
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   columnVirtualizer: Virtualizer<HTMLDivElement, Element>;
   flattenedData: IFlattenedData<TData>[];
 }
 
-export interface IVirtualTableRow<TData> extends IVirtualBodyBase<TData>, IExpandable<TData> {
+export interface IVirtualTableRow<TData> {
+  rowIndex: number;
+  data?: TData;
+  headers: IHeader<TData>[];
   rowType: 'row' | 'expanded';
   virtualRow: { size: number; start: number };
   virtualColumns: { index: number; start: number; size: number }[];
 }
 
-export interface IVirtualTableCell<TData> extends IExpandable<TData> {
-  column?: IColumn<TData>;
-  data: TData;
+export interface IVirtualTableCell<TData> {
+  column?: IHeader<TData>;
+  data?: TData;
   width?: number;
   left?: number;
-  isExpanded?: boolean;
+  isExpandRow?: boolean;
   colSpan?: number;
-  renderExpandedRow?: (item: TData) => React.ReactNode;
-  onClickExpand?: () => void;
 }
 
 export interface ITableFilter {

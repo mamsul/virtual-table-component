@@ -111,7 +111,7 @@ const VirtualColumnAction = (props: IVirtualColumnAction) => {
         name='menu'
         className={clsx(
           'text-gray-500 hover:text-gray-800 w-4 ml-auto cursor-pointer',
-          showActionCard && '!text-gray-900',
+          showActionCard.show && '!text-gray-900',
         )}
         onClick={handleClickActionToggle}
       />

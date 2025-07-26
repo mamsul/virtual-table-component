@@ -14,10 +14,7 @@ export default function VirtualTable<TData>(virtualTableProps: IVirtualTable<TDa
     flattenedData,
     tableProviderValue,
     handleScroll,
-    handleClickExpandedRow,
-    renderExpandedRow,
-    columns,
-    headerHeight,
+    headers,
     tableBodyTopPosition,
   } = useVirtualTableState({ ...virtualTableProps });
 
@@ -25,24 +22,25 @@ export default function VirtualTable<TData>(virtualTableProps: IVirtualTable<TDa
     <TableProvider {...tableProviderValue}>
       <div
         ref={scrollElementRef}
+        onScroll={handleScroll}
         className={clsx(
           'w-full h-full overflow-auto relative border border-gray-200',
           virtualTableProps.classNameOuterTable,
         )}
-        onScroll={handleScroll}
       >
         <table style={{ width: columnVirtualizer.getTotalSize() }}>
           <thead className='sticky top-0 z-10'>
             <tr>
-              {columnVirtualizer.getVirtualItems().map((virtualColumn) => (
-                <VirtualTableHeaderItem
-                  key={virtualColumn.key}
-                  columnIndex={virtualColumn.index}
-                  column={columns[virtualColumn.index]}
-                  headerHeight={headerHeight}
-                  virtualColumn={virtualColumn}
-                />
-              ))}
+              {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
+                return (
+                  <VirtualTableHeaderItem
+                    key={virtualColumn.key}
+                    headerIndex={virtualColumn.index}
+                    header={headers[virtualColumn.index]}
+                    virtualColumn={virtualColumn}
+                  />
+                );
+              })}
             </tr>
           </thead>
 
@@ -60,12 +58,11 @@ export default function VirtualTable<TData>(virtualTableProps: IVirtualTable<TDa
                 <VirtualTableRow
                   key={virtualRow.key}
                   rowType={row.type as 'row' | 'expanded'}
-                  columns={columns}
+                  headers={headers}
+                  rowIndex={virtualRow.index}
                   data={row.item}
                   virtualRow={{ size: virtualRow.size, start: virtualRow.start }}
                   virtualColumns={columnVirtualizer.getVirtualItems()}
-                  onClickExpandedRow={handleClickExpandedRow}
-                  renderExpandedRow={renderExpandedRow}
                 />
               );
             })}

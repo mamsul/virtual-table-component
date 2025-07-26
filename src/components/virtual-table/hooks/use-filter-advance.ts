@@ -30,7 +30,7 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
     if (isResetFilter) setActiveAdvanceFilters({} as IActiveAdvanceFilters<TDataSource>);
   }, [isResetFilter]);
 
-  useOnClickOutside(filterAdvanceCardRef, () =>
+  useOnClickOutside([filterAdvanceCardRef], () =>
     setIsFilterAdvanceCardOpen({ show: false, key: '' }),
   );
 

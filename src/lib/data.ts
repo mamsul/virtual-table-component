@@ -1,4 +1,4 @@
-import type { IColumn } from '../components/virtual-table-2';
+import type { IHeader } from '../components/virtual-table';
 
 export interface IUser {
   id: number;
@@ -22,22 +22,22 @@ export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
   phone: `+62 ${Math.floor(Math.random() * 100)}${Math.floor(Math.random() * 100)}${Math.floor(
     Math.random() * 100,
   )}`,
-  //   address: `Address ${index + 1}`,
-  //   city: `City ${index + 1}`,
-  //   country: `Country ${index + 1}`,
-  //   company: `Company ${index + 1}`,
+  address: `Address ${index + 1}`,
+  city: `City ${index + 1}`,
+  country: `Country ${index + 1}`,
+  company: `Company ${index + 1}`,
 }));
 
-export const columns: IColumn<IUser>[] = [
-  { key: 'expand', header: '', width: 40, noStretch: true },
-  { key: 'id', header: 'ID' },
-  { key: 'name', header: 'Name' },
-  { key: 'email', header: 'Email', width: 200 },
-  { key: 'age', header: 'Age', width: 120 },
-  { key: 'gender', header: 'Gender', width: 120 },
-  { key: 'phone', header: 'Phone', width: 200 },
-  //   { key: 'address', header: 'Address', width: 200 },
-  //   { key: 'city', header: 'City', width: 140 },
-  //   { key: 'country', header: 'Country', width: 140 },
-  //   { key: 'company', header: 'Company' },
+export const columns: IHeader<IUser>[] = [
+  { key: 'expand', caption: '', width: 40, noStretch: true },
+  { key: 'id', caption: 'ID' },
+  { key: 'name', caption: 'Name' },
+  { key: 'email', caption: 'Email', width: 200 },
+  { key: 'age', caption: 'Age', width: 120 },
+  { key: 'gender', caption: 'Gender', width: 120 },
+  { key: 'phone', caption: 'Phone', width: 200 },
+  { key: 'address', caption: 'Address', width: 200 },
+  { key: 'city', caption: 'City', width: 140 },
+  { key: 'country', caption: 'Country', width: 140 },
+  { key: 'company', caption: 'Company' },
 ];

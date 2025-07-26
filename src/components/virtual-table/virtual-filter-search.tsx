@@ -2,13 +2,13 @@ import { memo, useRef } from 'react';
 import { InputSearch } from './components';
 
 interface IVirtualFilterSearchProps {
-  columnKey: string;
+  headerKey: string;
   onSearchChange: (value: string) => void;
   onSearchClear: () => void;
 }
 
 function VirtualFilterSearch(props: IVirtualFilterSearchProps) {
-  const { columnKey, onSearchChange, onSearchClear } = props;
+  const { headerKey, onSearchChange, onSearchClear } = props;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleEnterSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -22,7 +22,7 @@ function VirtualFilterSearch(props: IVirtualFilterSearchProps) {
 
   return (
     <InputSearch
-      id={'filter-search-' + columnKey}
+      id={'filter-search-' + headerKey}
       className='!w-full bg-white'
       ref={inputRef}
       onKeyDown={handleEnterSearch}

@@ -8,13 +8,13 @@ import Icon from './icons';
 // ======================= VARIABLES and TYPE DEFINITIONS =======================
 // ==============================================================================
 interface VirtualFilterSelectionProps {
-  columnKey: string;
+  headerKey: string;
   options: string[];
   onApplyFilter: (value: string[]) => void;
   onResetFilter: () => void;
 }
 
-interface SelectionListProps extends Pick<VirtualFilterSelectionProps, 'options' | 'columnKey'> {
+interface SelectionListProps extends Pick<VirtualFilterSelectionProps, 'options' | 'headerKey'> {
   scrollRef: React.RefObject<HTMLDivElement | null>;
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   isEmptyOptions?: boolean;
@@ -38,7 +38,7 @@ const filteringOptions = (options: string[], searchQuery: string) => {
 // ======================= MAIN COMPONENT =======================
 // ==============================================================
 function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
-  const { options, columnKey, onApplyFilter, onResetFilter } = props;
+  const { options, headerKey, onApplyFilter, onResetFilter } = props;
 
   const filterRef = useRef<HTMLDivElement>(null);
   const filterScrollRef = useRef<HTMLDivElement>(null);
@@ -97,7 +97,7 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
           {!isEmptyOpts && (
             <div className='px-1.5 pt-1.5'>
               <InputSearch
-                id={`filter-selection-search-${columnKey}`}
+                id={`filter-selection-search-${headerKey}`}
                 value={searchQuery}
                 disabled={!filteredOptions.length}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -109,7 +109,7 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
             scrollRef={filterScrollRef}
             rowVirtualizer={rowVirtualizer}
             options={filteredOptions}
-            columnKey={columnKey}
+            headerKey={headerKey}
             isEmptyOptions={isEmptyOpts}
             isCheked={selectedOptions.includes}
             onCheckboxChange={onCheckboxChange}
@@ -127,7 +127,7 @@ function VirtualFilterSelection(props: VirtualFilterSelectionProps) {
 const SelectionList = (props: SelectionListProps) => {
   const {
     options,
-    columnKey,
+    headerKey,
     rowVirtualizer,
     isCheked,
     isEmptyOptions,
@@ -164,7 +164,7 @@ const SelectionList = (props: SelectionListProps) => {
               }}
             >
               <Checkbox
-                id={`filter-selection-checkbox-${columnKey}-${virtualRow.index}`}
+                id={`filter-selection-checkbox-${headerKey}-${virtualRow.index}`}
                 label={optionLabel}
                 checked={isCheked(optionLabel)}
                 onChecked={() => onCheckboxChange(optionLabel)}

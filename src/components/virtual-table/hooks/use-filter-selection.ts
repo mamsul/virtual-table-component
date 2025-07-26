@@ -25,7 +25,7 @@ export default function useFilterSelection<TDataSource>(props: IFilterTable<TDat
     if (isResetFilter) resetAllFilter();
   }, [isResetFilter]);
 
-  useOnClickOutside(filterCardRef, () => setIsFilterCardOpen({ show: false, key: '' }));
+  useOnClickOutside([filterCardRef], () => setIsFilterCardOpen({ show: false, key: '' }));
 
   const filteredData = useMemo(() => {
     if (Object.keys(activeFilters).length === 0) return data;

@@ -24,7 +24,7 @@ export default function useFilterSearch<TDataSource>(props: ISearchTable<TDataSo
     if (isResetFilter) seActiveSearch({} as Record<keyof TDataSource, string>);
   }, [isResetFilter]);
 
-  useOnClickOutside(searchCardRef, () => setIsSearchCardOpen({ show: false, key: '' }));
+  useOnClickOutside([searchCardRef], () => setIsSearchCardOpen({ show: false, key: '' }));
 
   const searchedData = useMemo(() => {
     if (!activeSearch || Object.keys(activeSearch).length === 0) return data || [];

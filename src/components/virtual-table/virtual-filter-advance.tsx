@@ -10,7 +10,7 @@ import FilterAction from './components/filter-action';
 // ======================= VARIABLES and TYPE DEFINITIONS =======================
 // ==============================================================================
 interface VirtualFilterAdvanceProps {
-  columnKey: string;
+  headerKey: string;
   onApplyFilter: (config: TFilterAdvanceConfig, value: string) => void;
   onResetFilter: () => void;
 }
@@ -40,7 +40,7 @@ const DEFAULT_FILTER_VALUE: IFilterValue = {
 // ======================= MAIN COMPONENT =======================
 // ==============================================================
 export default function VirtualFilterAdvance(props: VirtualFilterAdvanceProps) {
-  const { columnKey, onApplyFilter, onResetFilter } = props;
+  const { headerKey, onApplyFilter, onResetFilter } = props;
 
   const filterRef = useRef<HTMLDivElement>(null);
   const [filterCard, setFilterCard] = useState<IFilterCard>(DEFAULT_FILTER_CARD);
@@ -88,7 +88,7 @@ export default function VirtualFilterAdvance(props: VirtualFilterAdvanceProps) {
 
             {filterValue.config !== 'None' && (
               <InputSearch
-                id={`filter-advance-value-${columnKey}`}
+                id={`filter-advance-value-${headerKey}`}
                 disabled={filterValue.config === 'None'}
                 value={filterValue.value}
                 onChange={(e) => setFilterValue((prev) => ({ ...prev, value: e.target.value }))}

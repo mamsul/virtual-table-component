@@ -1,28 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import type { IColumnVisibilityListItem, ITableFilter } from '../lib';
-
-/**
- * ===============================================
- *                 Data Context
- * ===============================================
- */
-interface ITableContext {
-  headerHeight: number;
-  outerTableheight: number;
-  outerTableWidth: number;
-  scrollbarWidth: number;
-  expandedContentHeight: number;
-  isFilterVisible: boolean;
-  sort: ITableFilter['sort'];
-  filterSearch: ITableFilter['search'];
-  filterSelection: ITableFilter['filterSelection'];
-  filterAdvance: ITableFilter['filterAdvance'];
-  handleToggleFilterVisibility: () => void;
-  handleResizeColumn: (key: string, columnIndex: number, newWidth: number) => void;
-  columnVisibilityList: IColumnVisibilityListItem[];
-  visibleColumns: string[];
-  handleToggleColumnVisibility: (key: string) => void;
-}
+import type { ITableContext } from '../lib';
 
 const TableContext = createContext<ITableContext | undefined>(undefined);
 
@@ -38,6 +15,9 @@ interface TableProviderProps extends ITableContext {
 export const TableProvider = (props: TableProviderProps) => {
   const {
     children,
+    headers,
+    flattenedData,
+    selectedRow,
     sort,
     outerTableheight,
     outerTableWidth,
@@ -48,15 +28,27 @@ export const TableProvider = (props: TableProviderProps) => {
     filterSearch,
     filterSelection,
     filterAdvance,
-    handleResizeColumn,
-    handleToggleFilterVisibility,
     columnVisibilityList,
     visibleColumns,
+    expandedRows,
+    renderExpandedRow,
+    getRowKey,
+    handleResizeColumn,
+    handleClickExpandRow,
+    handleToggleFilterVisibility,
     handleToggleColumnVisibility,
+    handleClickRow,
+    handleDoubleClickRow,
+    handleRightClickRow,
+    checkboxSelectionRow,
   } = props;
 
   const contextValue = React.useMemo(
     (): ITableContext => ({
+      headers,
+      flattenedData,
+      selectedRow,
+      getRowKey,
       sort,
       outerTableheight,
       outerTableWidth,
@@ -67,13 +59,24 @@ export const TableProvider = (props: TableProviderProps) => {
       headerHeight,
       filterAdvance,
       filterSelection,
+      expandedRows,
+      renderExpandedRow,
       handleResizeColumn,
+      handleClickExpandRow,
       handleToggleFilterVisibility,
       columnVisibilityList,
       visibleColumns,
       handleToggleColumnVisibility,
+      handleClickRow,
+      handleDoubleClickRow,
+      handleRightClickRow,
+      checkboxSelectionRow,
     }),
     [
+      headers,
+      flattenedData,
+      selectedRow,
+      getRowKey,
       sort,
       expandedContentHeight,
       isFilterVisible,
@@ -81,7 +84,10 @@ export const TableProvider = (props: TableProviderProps) => {
       filterSelection,
       filterAdvance,
       headerHeight,
+      expandedRows,
+      renderExpandedRow,
       handleResizeColumn,
+      handleClickExpandRow,
       handleToggleFilterVisibility,
       outerTableheight,
       outerTableWidth,
@@ -89,6 +95,10 @@ export const TableProvider = (props: TableProviderProps) => {
       columnVisibilityList,
       visibleColumns,
       handleToggleColumnVisibility,
+      handleClickRow,
+      handleDoubleClickRow,
+      handleRightClickRow,
+      checkboxSelectionRow,
     ],
   );
 
