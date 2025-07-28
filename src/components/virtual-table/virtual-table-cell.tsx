@@ -5,7 +5,17 @@ import { type IVirtualTableCell } from './lib';
 import { Checkbox } from './components';
 
 export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>) {
-  const { column, data, width, left, colSpan, isExpandRow = false } = props;
+  const {
+    column,
+    data,
+    width,
+    cellLeft,
+    rowIndex,
+    rowStart,
+    rowSize,
+    colspan,
+    isExpandRow = false,
+  } = props;
 
   const {
     outerTableWidth,
@@ -36,7 +46,6 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
   if (!isExpandRow) {
     return (
       <td
-        style={{ width: `${width}px`, transform: `translateX(${left}px)` }}
         onClick={() => !isExpandColumn && handleClickRow?.(data)}
         onDoubleClick={() => !isExpandColumn && handleDoubleClickRow?.(data)}
         onContextMenu={(e) => {
@@ -46,12 +55,28 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
           }
         }}
         className={clsx(
-          'absolute left-0 h-full px-1.5 flex items-center text-xs',
+          'h-full px-1.5 flex items-center text-xs',
+          rowIndex % 2 === 1 ? 'bg-gray-50' : 'bg-white',
           handleClickRow || handleDoubleClickRow ? 'cursor-pointer' : 'cursor-default',
           isSelected
-            ? 'bg-blue-50 border-y border-y-blue-950 border-r border-r-gray-200 nth-last-[1]:border-r-blue-950 nth-[1]:border-l nth-[1]:border-l-blue-950'
+            ? '!bg-blue-50 border-y border-y-blue-950 border-r !border-r-gray-200 nth-last-[1]:border-r-blue-950 nth-[1]:border-l nth-[1]:border-l-blue-950'
             : 'border-r border-b border-gray-200',
         )}
+        style={{
+          height: `${rowSize}px`,
+          width: `${width}px`,
+          ...(column?.sticky === 'left' && {
+            position: 'sticky',
+            left: cellLeft,
+            top: rowStart,
+            zIndex: 9000000000,
+          }),
+          ...(!column?.sticky && {
+            position: 'absolute',
+            transform: `translateX(${cellLeft}px)`,
+            top: 0,
+          }),
+        }}
       >
         {isCheckboxSelectionColumn ? (
           <div className='size-full flex justify-center items-center'>
@@ -80,7 +105,7 @@ export default function VirtualTableCell<TData>(props: IVirtualTableCell<TData>)
   }
 
   return (
-    <td colSpan={colSpan} className='border-b border-gray-200'>
+    <td colSpan={colspan} className='border-b border-gray-200'>
       <div style={{ height: expandedContentHeight, width: outerTableWidth - scrollbarWidth }}>
         {renderExpandedRow?.(data as TData)}
       </div>

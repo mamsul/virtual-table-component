@@ -30,21 +30,22 @@ const VirtualTableHeaderItem = <TData,>(props: IVirtualTableHeaderItem<TData>) =
   const calculatedHeaderHeight = headerHeight + (isFilterVisible ? DEFAULT_SIZE.FILTER_HEIGHT : 0);
 
   const isStickyLeft = header.sticky === 'left';
-
-  const stickyLeft = isStickyLeft ? virtualColumn.start : undefined;
+  const isStickyRight = header.sticky === 'right';
+  const leftPosition = isStickyLeft || isStickyRight ? virtualColumn.start : 0;
 
   return (
     <th
       ref={boxRef}
       className={clsx(
         'group/outer bg-gray-50',
-        isStickyLeft ? 'sticky border-r border-transparent' : 'absolute',
+        isStickyLeft || isStickyRight ? 'sticky' : 'absolute',
       )}
       style={{
         height: calculatedHeaderHeight,
         width: `${virtualColumn.size}px`,
-        left: isStickyLeft ? stickyLeft : 0,
-        transform: isStickyLeft ? undefined : `translateX(${virtualColumn.start}px)`,
+        left: leftPosition,
+        transform:
+          isStickyLeft || isStickyRight ? undefined : `translateX(${virtualColumn.start}px)`,
         zIndex: 10000 - headerIndex,
       }}
     >

@@ -245,10 +245,13 @@ export function useVirtualTableState<TData>(virtualTableProps: IVirtualTable<TDa
 
   const handleToggleFilterVisibility = useCallback(() => setIsFilterVisible((prev) => !prev), []);
 
+  const headerHasSticky = memoizedVisibleHeaders.some((header) => header.sticky);
   const expandedContentHeight = DEFAULT_SIZE.EXPANDED_ROW_HEIGHT;
   const tableHeaderHeight = headerHeight || DEFAULT_SIZE.HEADER_HEIGTH;
-  const tableBodyTopPosition =
-    headerHeight || DEFAULT_SIZE.HEADER_HEIGTH + (isFilterVisible ? DEFAULT_SIZE.FILTER_HEIGHT : 0);
+  const tableBodyTopPosition = headerHasSticky
+    ? 0
+    : headerHeight ||
+      DEFAULT_SIZE.HEADER_HEIGTH + (isFilterVisible ? DEFAULT_SIZE.FILTER_HEIGHT : 0);
 
   const tableProviderValue: ITableContext = {
     headers: tableHeaders as IHeader<unknown>[],

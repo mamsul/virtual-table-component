@@ -106,10 +106,14 @@ export interface IVirtualTableRow<TData> {
 export interface IVirtualTableCell<TData> {
   column?: IHeader<TData>;
   data?: TData;
-  width?: number;
-  left?: number;
-  isExpandRow?: boolean;
-  colSpan?: number;
+  width: number;
+  cellIndex: number;
+  cellLeft: number;
+  rowStart: number;
+  rowSize: number;
+  rowIndex: number;
+  colspan: number;
+  isExpandRow: boolean;
 }
 
 export interface ITableFilter {

@@ -29,8 +29,9 @@ export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
 }));
 
 export const columns: IHeader<IUser>[] = [
+  { key: 'row-selection', caption: '', width: 40, noStretch: true, sticky: 'left' },
   { key: 'expand', caption: '', width: 40, noStretch: true },
-  { key: 'id', caption: 'ID' },
+  { key: 'id', caption: 'ID', sticky: 'left' },
   { key: 'name', caption: 'Name' },
   { key: 'email', caption: 'Email', width: 200 },
   { key: 'age', caption: 'Age', width: 120 },
