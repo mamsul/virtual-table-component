@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import useOnClickOutside from './use-click-outside';
-import { calculateFixedCardPosition } from '../lib/utils';
 import type { TFilterAdvanceConfig } from '../lib';
 
 type IActiveAdvanceFilters<T> = Record<
@@ -21,7 +20,6 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
 
   const filterAdvanceCardRef = useRef<HTMLDivElement | null>(null);
   const [isFilterAdvanceCardOpen, setIsFilterAdvanceCardOpen] = useState({ show: false, key: '' });
-  const [filterAdvanceCardPosition, setFilterAdvanceCardPosition] = useState({ top: 0, left: 0 });
   const [activeAdvanceFilters, setActiveAdvanceFilters] = useState<
     IActiveAdvanceFilters<TDataSource>
   >({} as IActiveAdvanceFilters<TDataSource>);
@@ -63,18 +61,7 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
     });
   }, [data, activeAdvanceFilters, useServerAdvanceFilter]);
 
-  const handleOpenAdvanceFilter = useCallback(
-    (e: React.MouseEvent<HTMLElement>, activeFilterKey: string) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const { calculatedTop, calculatedLeft } = calculateFixedCardPosition(rect);
-
-      setFilterAdvanceCardPosition({ top: calculatedTop, left: calculatedLeft });
-      setIsFilterAdvanceCardOpen({ show: true, key: activeFilterKey });
-    },
-    [],
-  );
-
-  const applyAdvanceFilter = useCallback(
+  const updateAdvanceFilter = useCallback(
     (dataKey: keyof TDataSource | string, config_name: TFilterAdvanceConfig, value: string) => {
       setActiveAdvanceFilters((prev) => {
         const newFilters = {
@@ -106,12 +93,10 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
 
   return {
     filteredAdvanceData,
-    filterAdvanceCardPosition,
     filterAdvanceCardRef,
     isFilterAdvanceCardOpen,
     setIsFilterAdvanceCardOpen,
-    handleOpenAdvanceFilter,
-    applyAdvanceFilter,
+    updateAdvanceFilter,
     resetAdvanceFilter,
     activeAdvanceFilters,
   };

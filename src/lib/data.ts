@@ -13,7 +13,7 @@ export interface IUser {
   company?: string;
 }
 
-export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
+export const dummyData: IUser[] = Array.from({ length: 500000 }, (_, index) => ({
   id: index + 1,
   name: `User ${index + 1}`,
   email: `user${index + 1}@example.com`,
@@ -29,6 +29,7 @@ export const dummyData: IUser[] = Array.from({ length: 1000 }, (_, index) => ({
 }));
 
 export const columns: IHeader<IUser>[] = [
+  { key: 'row-selection', caption: '', width: 40, noStretch: true },
   { key: 'expand', caption: '', width: 40, noStretch: true },
   { key: 'id', caption: 'ID' },
   { key: 'name', caption: 'Name' },

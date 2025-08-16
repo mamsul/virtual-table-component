@@ -1,5 +1,5 @@
 import { type Dispatch, useState } from 'react';
-import Icon from '../icons';
+import Icon from '../../icons';
 import clsx from 'clsx';
 
 interface DropdownProps {

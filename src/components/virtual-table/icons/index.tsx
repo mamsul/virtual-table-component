@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { IIconProps } from '../lib';
 import IcCheck from './ic-check';
 import IcChevron from './ic-chevon';
@@ -37,8 +38,10 @@ type Props<Name extends IconName = IconName> = {
   name: Name;
 } & IconProps<Name>;
 
-export default function Icon<Name extends IconName>({ name, ...rest }: Props<Name>) {
+function Icon<Name extends IconName>({ name, ...rest }: Props<Name>) {
   const Component = icons[name];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return <Component {...(rest as any)} />;
 }
+
+export default memo(Icon) as <Name extends IconName>(props: Props<Name>) => React.ReactNode;

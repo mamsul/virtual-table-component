@@ -1,53 +1,24 @@
 import type { Virtualizer } from '@tanstack/react-virtual';
 import { FILTER_ADVANCE_CONFIG } from './constants';
-
-export interface ITableContext {
-  isFilterVisible: boolean;
-  headers: IHeader<unknown>[];
-  flattenedData: IFlattenedData<unknown>[];
-  headerHeight: number;
-  outerTableheight: number;
-  outerTableWidth: number;
-  scrollbarWidth: number;
-  expandedContentHeight: number;
-  expandedRows: Set<string | number>;
-  selectedRow: unknown;
-  columnVisibilityList: IColumnVisibilityListItem[];
-  visibleColumns: string[];
-  sort: ITableFilter['sort'];
-  filterSearch: ITableFilter['search'];
-  filterSelection: ITableFilter['filterSelection'];
-  filterAdvance: ITableFilter['filterAdvance'];
-  checkboxSelectionRow?: {
-    selectedRows: Set<string | number>;
-    handleSelectCheckboxRow: (item: unknown) => void;
-    handleSelectAllCheckboxRow: () => void;
-    handleUnselectAllCheckboxRow: () => void;
-  };
-  getRowKey: (item: unknown) => string | number;
-  renderExpandedRow?: (item: unknown) => React.ReactNode;
-  handleClickRow?: (data: unknown) => void;
-  handleDoubleClickRow?: (data: unknown) => void;
-  handleRightClickRow?: (data: unknown, position: { x: number; y: number }) => void;
-  handleClickExpandRow: (item: unknown) => void;
-  handleToggleFilterVisibility: () => void;
-  handleResizeColumn: (key: string, columnIndex: number, newWidth: number) => void;
-  handleToggleColumnVisibility: (key: string) => void;
-}
+import type { ReactNode } from 'react';
 
 export interface IVirtualTable<TData> extends ITableUIProperty {
   headers: IHeader<TData>[];
   data: TData[];
+  headerMode?: 'single' | 'double';
   classNameOuterTable?: string;
-  getRowKey: (item: TData) => string | number;
-  getScrollElement?: (el: HTMLDivElement | null) => void;
+  rowKey: keyof TData | ((data: TData, index: number) => string);
   renderExpandedRow?: (item: TData) => React.ReactNode;
   onRowExpand?: (item: TData) => void;
-  onScroll?: (scrollTop: number) => void;
   onClickRow?: (item: TData) => void;
   onDoubleClickRow?: (item: TData) => void;
   onRightClickRow?: (item: TData, position: { x: number; y: number }) => void;
-  onSelectCheckboxRow?: (selectedRows: (string | number)[]) => void;
+  onChangeCheckboxRowSelection?: (
+    selectedRows: (string | number)[],
+    deselectedRows: (string | number)[],
+    isSelectAll: boolean,
+  ) => void;
+  onRenderExpandedContent?: (item: TData) => ReactNode;
 }
 
 interface ITableUIProperty {
@@ -61,8 +32,9 @@ export interface IHeader<TData> {
   caption: string;
   width?: number;
   noStretch?: boolean;
-  filterOptions?: string[];
+  filterSelectionOptions?: string[];
   sticky?: 'left' | 'right';
+  visible?: boolean;
   render?: (item: TData) => React.ReactNode;
 }
 
@@ -97,19 +69,25 @@ export interface IVirtualTableBody<TData> {
 export interface IVirtualTableRow<TData> {
   rowIndex: number;
   data?: TData;
-  headers: IHeader<TData>[];
+  stickyHeaders?: IHeader<TData>[];
+  regularHeaders: IHeader<TData>[];
   rowType: 'row' | 'expanded';
   virtualRow: { size: number; start: number };
   virtualColumns: { index: number; start: number; size: number }[];
 }
 
 export interface IVirtualTableCell<TData> {
+  isSticky?: boolean;
   column?: IHeader<TData>;
   data?: TData;
-  width?: number;
-  left?: number;
-  isExpandRow?: boolean;
-  colSpan?: number;
+  width: number;
+  cellIndex: number;
+  cellLeft: number;
+  rowStart: number;
+  rowSize: number;
+  rowIndex: number;
+  colSpan: number;
+  isExpandRow: boolean;
 }
 
 export interface ITableFilter {

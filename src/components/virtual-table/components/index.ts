@@ -1,7 +1,13 @@
 export { default as ExpandedRowWrapper } from './expanded-row-wrapper';
-export { default as InputSearch } from './input-search';
+export { default as InputSearch } from './utility/input-search';
 export { default as ResizeIndicator } from './resize-indicator';
-export { default as Checkbox } from './checkbox';
-export { default as Dropdown } from './dropdown';
+export { default as Checkbox } from './utility/checkbox';
+export { default as Dropdown } from './utility/dropdown';
 export { default as FilterAction } from './filter-action';
-export { default as FilterCard } from './filter-card';
+export { default as FilterCard } from './utility/filter-card';
+export { default as RowCheckbox } from './row-checkbox';
+export { default as RowExpand } from './row-expand';
+export { default as HeaderCaption } from './header-caption';
+export { default as TableHead } from './table-head';
+export { default as TableCell } from './table-cell';
+export { default as TableFilter } from './table-filter';

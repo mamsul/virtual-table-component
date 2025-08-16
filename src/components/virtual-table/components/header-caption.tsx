@@ -1,80 +1,43 @@
-import { memo, useMemo } from 'react';
-import Icon from '../icons';
-import { useTableContext } from '../context/table-context';
-import VirtualColumnAction from '../virtual-column-action';
-import { Checkbox } from './index';
+import { memo } from 'react';
+import Icons from '../icons';
+import { useFilterContext } from '../context/filter-context';
+import HeaderAction from './header-action';
 
-type IHeaderCaption = {
-  isShowFilter: boolean;
-  headerCaption: string;
+/**
+ * NOTE: Rendering Header.
+ * - Single Header: Tampilkan caption saja.
+ * - Double Header: Tampilkan caption, sorting, dan icon burger menu toggle Header Action.
+ */
+
+interface IHeaderCaption {
+  isSingleHeader: boolean;
+  caption: string;
   headerKey: string;
-};
+}
 
-const HeaderCaption = ({ isShowFilter, headerCaption, headerKey }: IHeaderCaption) => {
-  const {
-    sort,
-    headerHeight,
-    handleToggleFilterVisibility,
-    flattenedData,
-    checkboxSelectionRow: CSR,
-  } = useTableContext();
+function HeaderCaption({ isSingleHeader, caption, headerKey }: IHeaderCaption) {
+  const { sort } = useFilterContext();
 
-  const { sortKey, sortBy, handleSort, handleSpecificSort } = sort || {};
-
-  const onClickSort = () => handleSort?.(headerKey);
-
-  // Logic untuk kolom selection
-  const isSelectAllColumn = headerKey === 'row-selection';
-  const totalRows = useMemo(
-    () => flattenedData.filter((item) => item.type === 'row').length,
-    [flattenedData],
-  );
-  const selectedCount = useMemo(() => CSR?.selectedRows?.size || 0, [CSR?.selectedRows]);
-  const isChecked = selectedCount === totalRows && totalRows > 0;
-
-  const handleSelectAllChange = (checked: boolean) => {
-    if (checked) {
-      CSR?.handleSelectAllCheckboxRow();
-    } else {
-      CSR?.handleUnselectAllCheckboxRow();
-    }
-  };
-
-  if (isSelectAllColumn) {
-    return (
-      <div
-        className='flex items-center justify-center border-b border-gray-200'
-        style={{ height: headerHeight }}
-      >
-        <Checkbox checked={isChecked} onChecked={handleSelectAllChange} />
-      </div>
-    );
-  }
+  if (isSingleHeader) return caption;
 
   return (
     <div
-      className='flex items-center px-1.5 border-b border-gray-200 cursor-pointer'
-      style={{ height: headerHeight }}
-      onClick={onClickSort}
+      className='flex-1 flex w-full justify-between items-center border-b border-gray-200 px-1.5 cursor-pointer'
+      onClick={() => sort.onChangeSort(headerKey.toString())}
     >
-      {headerCaption}
+      <span className='flex items-center gap-1.5'>
+        {caption}
+        <Icons
+          name='sort'
+          className='cursor-pointer'
+          sort={headerKey === sort.sortKey ? sort.sortBy : 'unset'}
+          onClick={() => sort.onChangeSort(headerKey.toString())}
+        />
+      </span>
 
-      {isShowFilter && (
-        <div className='w-full flex justify-between items-center'>
-          <Icon
-            name='sort'
-            className='cursor-pointer ms-2'
-            sort={headerKey === sortKey ? sortBy : 'unset'}
-            onClick={onClickSort}
-          />
-          <VirtualColumnAction
-            onClickSort={(sortBy) => handleSpecificSort(headerKey, sortBy)}
-            onToggleFilterVisibility={handleToggleFilterVisibility}
-          />
-        </div>
-      )}
+      <HeaderAction headerKey={headerKey} />
     </div>
   );
-};
+}
 
-export default memo(HeaderCaption) as typeof HeaderCaption;
+export default memo(HeaderCaption);

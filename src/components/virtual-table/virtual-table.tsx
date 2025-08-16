@@ -1,74 +1,79 @@
+import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { TableProvider } from './context/table-context';
+import { DEFAULT_SIZE, type IVirtualTable } from './lib';
+import { HeaderContextProvider, type HeaderContext } from './context/header-context';
+import { VirtualizerContextProvider } from './context/virtualizer-context';
+import { SelectionContextProvider } from './context/selection-context';
+import { FilterContextProvider } from './context/filter-context';
+import VirtualTableHeader from './virtual-table-header';
+import VirtualTableBody from './virtual-table-body';
 import './lib/style.css';
-import { type IVirtualTable } from './lib';
-import { useVirtualTableState } from './hooks/use-virtual-table-state';
-import VirtualTableHeaderItem from './virtual-table-header-item';
-import VirtualTableRow from './virtual-table-row';
+import UIContextProvider from './context/ui-context';
 
-export default function VirtualTable<TData>(virtualTableProps: IVirtualTable<TData>) {
+export default function VirtualTable5<TData>(virtualTableProps: IVirtualTable<TData>) {
   const {
-    scrollElementRef,
-    columnVirtualizer,
-    rowVirtualizer,
-    flattenedData,
-    tableProviderValue,
-    handleScroll,
+    rowKey,
+    data,
     headers,
-    tableBodyTopPosition,
-  } = useVirtualTableState({ ...virtualTableProps });
+    headerMode = 'double',
+    headerHeight = DEFAULT_SIZE.HEADER_HEIGTH,
+    classNameOuterTable,
+    onClickRow,
+    onDoubleClickRow,
+    onRightClickRow,
+    onChangeCheckboxRowSelection,
+    onRenderExpandedContent,
+  } = virtualTableProps;
+
+  const scrollElementRef = useRef<HTMLDivElement>(null);
+
+  const modifiedHeaders = useMemo(() => {
+    return headers.map((header) => ({
+      ...header,
+      visible: true,
+    }));
+  }, [headers]);
 
   return (
-    <TableProvider {...tableProviderValue}>
-      <div
-        ref={scrollElementRef}
-        onScroll={handleScroll}
-        className={clsx(
-          'w-full h-full overflow-auto relative border border-gray-200',
-          virtualTableProps.classNameOuterTable,
-        )}
-      >
-        <table style={{ width: columnVirtualizer.getTotalSize() }}>
-          <thead className='sticky top-0 z-10'>
-            <tr>
-              {columnVirtualizer.getVirtualItems().map((virtualColumn) => {
-                return (
-                  <VirtualTableHeaderItem
-                    key={virtualColumn.key}
-                    headerIndex={virtualColumn.index}
-                    header={headers[virtualColumn.index]}
-                    virtualColumn={virtualColumn}
-                  />
-                );
-              })}
-            </tr>
-          </thead>
+    <HeaderContextProvider initialColumns={modifiedHeaders as HeaderContext[]}>
+      <FilterContextProvider dataSource={data}>
+        <VirtualizerContextProvider rowKey={rowKey} scrollElementRef={scrollElementRef}>
+          <SelectionContextProvider onChangeCheckboxRowSelection={onChangeCheckboxRowSelection}>
+            <UIContextProvider expandedContent={(data) => onRenderExpandedContent?.(data as TData)}>
+              <div
+                ref={scrollElementRef}
+                className={clsx(
+                  'w-full h-full overflow-auto relative border border-gray-200',
+                  classNameOuterTable,
+                )}
+              >
+                <VirtualTableHeader headerHeight={headerHeight} headerMode={headerMode} />
 
-          <tbody
-            style={{
-              position: 'relative',
-              height: rowVirtualizer.getTotalSize(),
-              top: tableBodyTopPosition,
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const row = flattenedData[virtualRow.index];
-
-              return (
-                <VirtualTableRow
-                  key={virtualRow.key}
-                  rowType={row.type as 'row' | 'expanded'}
-                  headers={headers}
-                  rowIndex={virtualRow.index}
-                  data={row.item}
-                  virtualRow={{ size: virtualRow.size, start: virtualRow.start }}
-                  virtualColumns={columnVirtualizer.getVirtualItems()}
+                <VirtualTableBody
+                  headerHeight={headerHeight}
+                  headerMode={headerMode}
+                  onClickRowToParent={onClickRow}
+                  onDoubleClickRowToParent={onDoubleClickRow}
+                  onRightClickRowToParent={onRightClickRow}
                 />
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </TableProvider>
+              </div>
+
+              <div
+                id='resize-line'
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  width: '1px',
+                  height: '100%',
+                  background: '#dbeafe',
+                  display: 'none',
+                  zIndex: 50,
+                }}
+              />
+            </UIContextProvider>
+          </SelectionContextProvider>
+        </VirtualizerContextProvider>
+      </FilterContextProvider>
+    </HeaderContextProvider>
   );
 }
