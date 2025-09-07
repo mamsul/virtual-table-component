@@ -8,27 +8,33 @@ efficiently.
 ## Tech Stack 🛠️
 
 ### Runtime & Package Manager
+
 - **Node.js** - 20.16.0
 - **pnpm** - 9.7.0
 
 ### Core Framework
+
 - **React** - 19.1.0
 - **TypeScript** - 5.8.3
 
 ### Virtualization & Performance
+
 - **TanStack Virtual** - 3.13.10 (Virtualization engine)
-- **react-virtualized-auto-sizer** - 1.0.26 (Auto-sizing)
+- **react-virtualized-auto-sizer** - 1.0.26 (Auto-sizing container dimensions)
 - **react-scroll-sync** - 1.0.2 (Scroll synchronization)
 
 ### Styling & UI
+
 - **Tailwind CSS** - 4.1.10
 - **clsx** - 2.1.1 (Conditional styling)
 
 ### Build Tools
+
 - **Vite** - 6.3.5 (Build tool and dev server)
 - **ESLint** - 9.25.0 (Code linting)
 
 ### State Management
+
 - **use-context-selector** - 2.0.0 (Optimized context)
 
 ## Getting Started 🚀
@@ -36,6 +42,7 @@ efficiently.
 ### Prerequisites
 
 Make sure you have the following installed:
+
 - Node.js 20.16.0 or higher
 - pnpm 9.7.0 or higher
 
@@ -81,6 +88,7 @@ pnpm preview      # Preview production build
 - **Freeze Columns** - Pin columns to left or right
 - **Auto Stretch** - Automatically adjust column widths
 - **Custom Renderers** - Render custom JSX content in cells
+- **Auto-Sizing** - Powered by react-virtualized-auto-sizer for dynamic container sizing
 
 ### Filtering & Sorting
 
@@ -103,6 +111,29 @@ pnpm preview      # Preview production build
 - **Low INP** - Optimized for smooth user interactions
 
 ## Usage 📖
+
+### Auto-Sizing with react-virtualized-auto-sizer
+
+This component uses `react-virtualized-auto-sizer` to automatically adjust the table dimensions based on its
+container. This is particularly useful when you want the table to fill the available space dynamically.
+
+```tsx
+import { VirtualTable } from 'react-virtualized-table';
+
+function App() {
+  return (
+    <div className='h-screen w-full'>
+      <VirtualTable
+        rowKey='id'
+        data={data}
+        headers={columns}
+        useAutoSizer={true} // Enable auto-sizing
+        onScrollTouchBottom={() => console.log('Load more data')}
+      />
+    </div>
+  );
+}
+```
 
 ### Basic Example
 
@@ -182,7 +213,7 @@ function App() {
 
 - `headerMode` - 'single' | 'double' (default: 'double')
 - `useFooter` - Show footer (default: false)
-- `useAutoSizer` - Auto-size container (default: false)
+- `useAutoSizer` - Enable react-virtualized-auto-sizer for dynamic sizing (default: false)
 - `isLoading` - Show loading indicator (default: false)
 - `rowHeight` - Height of each row (default: 40)
 - `headerHeight` - Height of header (default: 40)
