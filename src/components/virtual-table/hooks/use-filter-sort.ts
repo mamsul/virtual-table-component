@@ -3,9 +3,9 @@ import type { TSortOrder } from '../lib';
 
 interface ISortTable<TDataSource> {
   data: TDataSource[];
-  onChangeSort?: (sortKey: string, sortBy: TSortOrder) => void;
   useServerSort?: boolean;
   isResetFilter?: boolean;
+  onChangeSort?: (sortKey: string, sortBy: TSortOrder) => void;
 }
 
 export default function useFilterSort<TDataSource>(props: ISortTable<TDataSource>) {

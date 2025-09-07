@@ -1,59 +1,73 @@
 import { useVirtualizer, Virtualizer, type VirtualItem } from '@tanstack/react-virtual';
 import { createContext, useContext } from 'use-context-selector';
+import { useEffect, useState } from 'react';
+import useFlattenedDataIncremental from '../hooks/use-flattened-data-incremental';
 import { useAutoStretchColumn } from '../hooks/use-auto-stretch-column';
 import { useHeaderContext } from './header-context';
 import { useFilterContext } from './filter-context';
-import useFlattenedDataIncremental from '../hooks/use-flattened-data-incremental';
 import { DEFAULT_SIZE } from '../lib';
 
-type VirtualizerContextValue = {
+type IVirtualizerContext = {
   flattenedData: { type: 'row' | 'expanded'; item: unknown; key: string }[];
   rowVirtualizer: Virtualizer<HTMLDivElement, Element> | null;
   columnVirtualizer: Virtualizer<HTMLDivElement, Element> | null;
   rowVirtualItems: VirtualItem[];
   columnVirtualItems: VirtualItem[];
   expandedRows: Set<string>;
+  containerWidth: number;
+  containerHeight: number;
   toggleExpandRow: (key: string) => void;
 };
 
-const VirtualizerContext = createContext<VirtualizerContextValue | null>(null);
-
-export const useVirtualizerContext = () => useContext(VirtualizerContext)!;
-
-export const VirtualizerContextProvider = <T,>({
-  children,
-  scrollElementRef,
-  rowKey,
-}: {
+interface IVirtualizerContextProvider<T> {
   children: React.ReactNode;
   rowKey: keyof T | ((data: T, index: number) => string);
   scrollElementRef: React.RefObject<HTMLDivElement | null>;
-}) => {
+}
+
+const VirtualizerContext = createContext<IVirtualizerContext | null>(null);
+
+export const useVirtualizerContext = () => useContext(VirtualizerContext)!;
+
+export const VirtualizerContextProvider = <T,>(props: IVirtualizerContextProvider<T>) => {
+  const { children, scrollElementRef, rowKey } = props;
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
+
   const { columns } = useHeaderContext();
   const { filteredData } = useFilterContext();
 
-  const { flattenedData, toggleExpand, expandedKeys } = useFlattenedDataIncremental(
-    filteredData as T[],
-    rowKey,
-  );
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      setContainerWidth(entries[0].contentRect.width);
+      setContainerHeight(entries[0].contentRect.height);
+    });
+
+    if (scrollElementRef.current) {
+      observer.observe(scrollElementRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  const { flattenedData, toggleExpand, expandedKeys } = useFlattenedDataIncremental(filteredData as T[], rowKey);
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
     count: columns.length,
     getScrollElement: () => scrollElementRef.current,
-    estimateSize: (index) => columns[index].width || 160,
-    overscan: 2,
+    estimateSize: (index) => columns[index].width!,
+    overscan: 5,
   });
 
   const rowVirtualizer = useVirtualizer({
     count: flattenedData.length,
     getScrollElement: () => scrollElementRef.current,
     estimateSize: () => DEFAULT_SIZE.ROW_HEIGHT,
-    overscan: 5,
+    overscan: 20,
   });
 
   useAutoStretchColumn({
-    scrollElementRef,
+    containerWidth,
     columns,
     columnVirtualizer,
   });
@@ -64,6 +78,8 @@ export const VirtualizerContextProvider = <T,>({
         flattenedData,
         rowVirtualizer,
         columnVirtualizer,
+        containerWidth,
+        containerHeight,
         rowVirtualItems: rowVirtualizer.getVirtualItems(),
         columnVirtualItems: columnVirtualizer.getVirtualItems(),
         toggleExpandRow: toggleExpand,

@@ -1,3 +1,5 @@
+import type { IAdjustedHeader } from './types';
+
 export function calculateFixedCardPosition(rect: DOMRect, cardHeight: number = 280) {
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
@@ -39,3 +41,22 @@ export function calculateElementOverflow(rect: DOMRect, cardWidth: number, cardH
 
   return { right, bottom, left, top };
 }
+
+// Fungsi untuk mencari child secara rekursif
+export const findChildRecursive = (
+  parent: IAdjustedHeader,
+  targetChildKey: string,
+): IAdjustedHeader | undefined => {
+  // Cek children langsung
+  const directChild = parent.children?.find((c) => c.key === targetChildKey);
+  if (directChild) return directChild;
+
+  // Jika tidak ditemukan, cari di children yang memiliki children (nested)
+  return parent.children?.reduce<IAdjustedHeader | undefined>((found, child) => {
+    if (found) return found;
+    if (child.children?.length) {
+      return findChildRecursive(child, targetChildKey);
+    }
+    return undefined;
+  }, undefined);
+};

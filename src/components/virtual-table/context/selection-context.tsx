@@ -19,7 +19,7 @@ interface ISelectionContextProvider {
   onChangeCheckboxRowSelection?: (
     selectedRows: (string | number)[],
     deselectedRows: (string | number)[],
-    isSelectAll: boolean,
+    isSelectAll: boolean
   ) => void;
 }
 
@@ -72,7 +72,7 @@ export const SelectionContextProvider = (props: ISelectionContextProvider) => {
         return finalData;
       });
     },
-    [selectAll, onChangeCheckboxRowSelection],
+    [selectAll, onChangeCheckboxRowSelection]
   );
 
   const toggleSelectAll = useCallback(
@@ -83,7 +83,7 @@ export const SelectionContextProvider = (props: ISelectionContextProvider) => {
       setSelectedRowKeys(new Set());
       setDeselectedRowKeys(new Set());
     },
-    [onChangeCheckboxRowSelection],
+    [onChangeCheckboxRowSelection]
   );
 
   const toggleExpandRow = useCallback((key: string): void => {

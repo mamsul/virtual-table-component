@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 export default function useFlattenedData<T>(
   data: T[] | undefined,
   expanded: Set<string | number>,
-  rowKey: keyof T | ((data: T, index: number) => string),
+  rowKey: keyof T | ((data: T, index: number) => string)
 ) {
   return useMemo(() => {
     if (!data) return [];

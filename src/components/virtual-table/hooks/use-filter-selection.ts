@@ -14,7 +14,7 @@ export default function useFilterSelection<TDataSource>(props: IFilterTable<TDat
 
   const filterCardRef = useRef<HTMLDivElement | null>(null);
   const [activeFilters, setActiveFilters] = useState<Record<keyof TDataSource, string[]>>(
-    {} as Record<keyof TDataSource, string[]>,
+    {} as Record<keyof TDataSource, string[]>
   );
 
   const [isFilterCardOpen, setIsFilterCardOpen] = useState({ show: false, key: '' });
@@ -33,7 +33,7 @@ export default function useFilterSelection<TDataSource>(props: IFilterTable<TDat
       return Object.entries(activeFilters).every(([columnName, filterValues]) => {
         const rowValue = row[columnName as keyof TDataSource]; // Bisa berupa angka atau string
         const filterValue = (filterValues as (string | number)[]).map((val) =>
-          typeof rowValue === 'number' ? Number(val) : String(val),
+          typeof rowValue === 'number' ? Number(val) : String(val)
         );
 
         return filterValue.some((value) => rowValue === value); // Pastikan tipe sama sebelum compare
@@ -59,7 +59,7 @@ export default function useFilterSelection<TDataSource>(props: IFilterTable<TDat
 
       setIsFilterCardOpen({ show: false, key: '' });
     },
-    [onChangeFilter],
+    [onChangeFilter]
   );
 
   const resetFilter = useCallback(
@@ -72,13 +72,10 @@ export default function useFilterSelection<TDataSource>(props: IFilterTable<TDat
       });
       setIsFilterCardOpen({ show: false, key: '' });
     },
-    [onChangeFilter],
+    [onChangeFilter]
   );
 
-  const resetAllFilter = useCallback(
-    () => setActiveFilters({} as Record<keyof TDataSource, string[]>),
-    [],
-  );
+  const resetAllFilter = useCallback(() => setActiveFilters({} as Record<keyof TDataSource, string[]>), []);
 
   return {
     filteredData,

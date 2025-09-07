@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 export default function useOnClickOutside(
   refs: React.RefObject<HTMLDivElement | HTMLElement | null>[],
-  handler: (currentTarget?: HTMLElement | null, el?: HTMLDivElement | HTMLElement) => void,
+  handler: (currentTarget?: HTMLElement | null, el?: HTMLDivElement | HTMLElement) => void
 ) {
   useEffect(() => {
     const safeRefs = Array.isArray(refs) ? refs : [];

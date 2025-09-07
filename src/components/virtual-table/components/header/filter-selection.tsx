@@ -1,14 +1,14 @@
 import { useVirtualizer, Virtualizer } from '@tanstack/react-virtual';
 import { memo, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import useOnClickOutside from '../hooks/use-click-outside';
-import FilterCard from './utility/filter-card';
-import FilterAction from './filter-action';
-import { DEFAULT_SIZE } from '../lib';
+import useOnClickOutside from '../../hooks/use-click-outside';
+import { DEFAULT_SIZE } from '../../lib';
+import Icons from '../../icons';
 import { createPortal } from 'react-dom';
-import Icon from '../icons';
-import InputSearch from './utility/input-search';
-import Checkbox from './utility/checkbox';
+import FilterCard from './filter-card';
+import InputSearch from '../input-search';
+import FilterAction from './filter-action';
+import Checkbox from '../checkbox';
 
 interface IFilterSelection {
   headerKey: string;
@@ -44,7 +44,7 @@ function FilterSelection(props: IFilterSelection) {
   const filterRef = useRef<HTMLDivElement>(null);
   const filterScrollRef = useRef<HTMLDivElement>(null);
 
-  const [showFilterCard, setShowFilterCard] = useState({
+  const [filterCard, setFilterCard] = useState({
     show: false,
     position: { top: 0, left: 0 },
   });
@@ -56,7 +56,7 @@ function FilterSelection(props: IFilterSelection) {
   }, [options, searchQuery]);
 
   useOnClickOutside([filterRef], () => {
-    if (showFilterCard.show) setShowFilterCard({ show: false, position: { top: 0, left: 0 } });
+    if (filterCard.show) setFilterCard({ show: false, position: { top: 0, left: 0 } });
   });
 
   const rowVirtualizer = useVirtualizer({
@@ -68,13 +68,13 @@ function FilterSelection(props: IFilterSelection) {
 
   const handleApplyFilter = () => {
     onApplyFilter(selectedOptions);
-    setShowFilterCard({ show: false, position: { top: 0, left: 0 } });
+    setFilterCard({ show: false, position: { top: 0, left: 0 } });
   };
 
   const handleResetFilter = () => {
     onResetFilter();
     setSelectedOptions([]);
-    setShowFilterCard({ show: false, position: { top: 0, left: 0 } });
+    setFilterCard({ show: false, position: { top: 0, left: 0 } });
   };
 
   const onCheckboxChange = (value: string) => {
@@ -84,15 +84,45 @@ function FilterSelection(props: IFilterSelection) {
   };
 
   const handleOpenFilterCard = (e: React.MouseEvent<SVGSVGElement>) => {
-    const rect = e?.currentTarget.getBoundingClientRect();
-    setShowFilterCard((prev) => ({
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const normalLeftPosition = rect.left - DEFAULT_SIZE.CARD_FILTER_WIDTH / 2;
+    const normalTopPosition = rect.top + 25;
+
+    const totalLeftPos = rect.left + DEFAULT_SIZE.CARD_FILTER_WIDTH / 2;
+    const totalTopPos = rect.top + DEFAULT_SIZE.CARD_FILTER_HEIGHT + 37;
+
+    const isRightOverflowed = totalLeftPos > viewportWidth;
+    const isLeftOverflowed = normalLeftPosition < 0;
+    const isBottomOverflowed = totalTopPos > viewportHeight;
+
+    let calculatedLeftPosition = normalLeftPosition;
+    let calculatedTopPosition = normalTopPosition;
+
+    if (isRightOverflowed) {
+      // geser ke kiri biar ga overflow right.
+      calculatedLeftPosition = viewportWidth - DEFAULT_SIZE.CARD_FILTER_WIDTH - 10;
+    } else if (isLeftOverflowed) {
+      // geser ke kanan biar ga overflow left>
+      calculatedLeftPosition = 10;
+    }
+
+    if (isBottomOverflowed) {
+      // geser ke atas biar ga overflow bottom>
+      calculatedTopPosition = rect.top - 37;
+    }
+
+    setFilterCard((prev) => ({
       ...prev,
       show: true,
-      position: { top: rect.top + 25, left: rect.left - DEFAULT_SIZE.CARD_FILTER_WIDTH / 2 },
+      position: { top: calculatedTopPosition, left: calculatedLeftPosition },
     }));
   };
 
   const isEmptyOpts = options.length < 1;
+  const isEmptyFilteredOpts = filteredOptions.length < 1;
 
   return (
     <div className='relative'>
@@ -100,29 +130,28 @@ function FilterSelection(props: IFilterSelection) {
         {selectedOptions.length > 0 && (
           <div className='absolute top-0 -right-1 size-2 rounded-full bg-knitto-blue-100 z-10' />
         )}
-        <Icon
+        <Icons
           name='filterMultiple'
           className={clsx(
             'shrink-0 w-3.5 text-gray-500 hover:text-gray-900 cursor-pointer',
-            showFilterCard.show && '!text-gray-900',
+            filterCard.show && '!text-gray-900',
           )}
           onClick={handleOpenFilterCard}
         />
       </div>
 
-      {showFilterCard.show &&
+      {filterCard.show &&
         createPortal(
           <FilterCard
             ref={filterRef}
             className='fixed z-[999]'
-            style={{ top: showFilterCard.position.top, left: showFilterCard.position.left }}
+            style={{ top: filterCard.position.top, left: filterCard.position.left }}
           >
             {!isEmptyOpts && (
               <div className='px-1.5 pt-1.5'>
                 <InputSearch
                   id={`filter-selection-search-${headerKey}`}
                   value={searchQuery}
-                  disabled={!filteredOptions.length}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
@@ -133,7 +162,7 @@ function FilterSelection(props: IFilterSelection) {
               rowVirtualizer={rowVirtualizer}
               options={filteredOptions}
               headerKey={headerKey}
-              isEmptyOptions={isEmptyOpts}
+              isEmptyOptions={isEmptyFilteredOpts}
               isCheked={(value) => selectedOptions.includes(value || '')}
               onCheckboxChange={onCheckboxChange}
             />
@@ -147,15 +176,7 @@ function FilterSelection(props: IFilterSelection) {
 }
 
 const SelectionList = (props: ISelectionList) => {
-  const {
-    options,
-    headerKey,
-    rowVirtualizer,
-    isCheked,
-    isEmptyOptions,
-    onCheckboxChange,
-    scrollRef,
-  } = props;
+  const { options, headerKey, rowVirtualizer, isCheked, isEmptyOptions, onCheckboxChange, scrollRef } = props;
 
   return (
     <div
@@ -170,30 +191,32 @@ const SelectionList = (props: ISelectionList) => {
           <span className='text-gray-400 text-xs font-normal'>No data available!</span>
         </div>
       ) : (
-        rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const optionLabel = options[virtualRow.index];
+        <div style={{ height: rowVirtualizer.getTotalSize() }}>
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const optionLabel = options[virtualRow.index];
 
-          return (
-            <div
-              key={virtualRow.key}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: `${virtualRow.size}px`,
-                transform: `translateY(${virtualRow.start}px)`,
-              }}
-            >
-              <Checkbox
-                id={`filter-selection-checkbox-${headerKey}-${virtualRow.index}`}
-                label={optionLabel}
-                checked={isCheked(optionLabel)}
-                onChecked={() => onCheckboxChange(optionLabel)}
-              />
-            </div>
-          );
-        })
+            return (
+              <div
+                key={virtualRow.key}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <Checkbox
+                  id={`filter-selection-checkbox-${headerKey}-${virtualRow.index}`}
+                  label={optionLabel}
+                  checked={isCheked(optionLabel)}
+                  onChecked={() => onCheckboxChange(optionLabel)}
+                />
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

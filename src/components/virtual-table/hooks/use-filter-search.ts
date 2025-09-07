@@ -28,8 +28,6 @@ export default function useFilterSearch<TDataSource>(props: ISearchTable<TDataSo
     if (!activeSearch || Object.keys(activeSearch).length === 0) return data || [];
     if (useServerSearch) return data;
 
-    console.log('masuk sini: ', activeSearch);
-
     return (data || []).filter((row) =>
       Object.entries(activeSearch).every(([dataKey, searchValue]) =>
         (searchValue as string).length === 0

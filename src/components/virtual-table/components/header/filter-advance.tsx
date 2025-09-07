@@ -1,19 +1,14 @@
 import { memo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import {
-  DEFAULT_SIZE,
-  FILTER_ADVANCE_CONFIG,
-  getObjKeyByValue,
-  type TFilterAdvanceConfig,
-} from '../lib';
-import useOnClickOutside from '../hooks/use-click-outside';
 import FilterAction from './filter-action';
-import FilterCard from './utility/filter-card';
-import Dropdown from './utility/dropdown';
+import FilterCard from './filter-card';
 import { createPortal } from 'react-dom';
-import Icon from '../icons';
-import InputSearch from './utility/input-search';
+import { DEFAULT_SIZE, FILTER_ADVANCE_CONFIG, getObjKeyByValue, type TFilterAdvanceConfig } from '../../lib';
+import useOnClickOutside from '../../hooks/use-click-outside';
+import Dropdown from '../dropdown';
+import InputSearch from '../input-search';
+import Icons from '../../icons';
 
 interface IFilterAdvance {
   headerKey: string;
@@ -70,11 +65,40 @@ function FilterAdvance(props: IFilterAdvance) {
   };
 
   const handleOpenFilterCard = (e: React.MouseEvent<SVGSVGElement>) => {
-    const rect = e?.currentTarget.getBoundingClientRect();
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const normalLeftPosition = rect.left - DEFAULT_SIZE.CARD_FILTER_WIDTH / 2;
+    const normalTopPosition = rect.top + 25;
+
+    const totalLeftPos = rect.left + DEFAULT_SIZE.CARD_FILTER_WIDTH / 2;
+    const totalTopPos = rect.top + DEFAULT_SIZE.CARD_FILTER_HEIGHT + 37;
+
+    const isRightOverflowed = totalLeftPos > viewportWidth;
+    const isLeftOverflowed = normalLeftPosition < 0;
+    const isBottomOverflowed = totalTopPos > viewportHeight;
+
+    let calculatedLeftPosition = normalLeftPosition;
+    let calculatedTopPosition = normalTopPosition;
+
+    if (isRightOverflowed) {
+      // geser ke kiri biar ga overflow right.
+      calculatedLeftPosition = viewportWidth - DEFAULT_SIZE.CARD_FILTER_WIDTH - 10;
+    } else if (isLeftOverflowed) {
+      // geser ke kanan biar ga overflow left>
+      calculatedLeftPosition = 10;
+    }
+
+    if (isBottomOverflowed) {
+      // geser ke atas biar ga overflow bottom>
+      calculatedTopPosition = rect.top - 37;
+    }
+
     setFilterCard((prev) => ({
       ...prev,
       show: true,
-      position: { top: rect.top + 25, left: rect.left - DEFAULT_SIZE.CARD_FILTER_WIDTH / 2 },
+      position: { top: calculatedTopPosition, left: calculatedLeftPosition },
     }));
   };
 
@@ -84,7 +108,7 @@ function FilterAdvance(props: IFilterAdvance) {
         {filterValue.config !== 'None' && filterValue.value.length > 0 && (
           <div className='absolute top-0 -right-1 size-2 rounded-full bg-knitto-blue-100 z-10' />
         )}
-        <Icon
+        <Icons
           name='filterAdvance'
           className={clsx(
             'shrink-0 w-5 text-gray-400 hover:text-gray-600 cursor-pointer',
@@ -103,11 +127,7 @@ function FilterAdvance(props: IFilterAdvance) {
           >
             <div className='p-1.5 w-full flex flex-col items-start space-y-1'>
               <span className='text-xs text-gray-800'>Filter dengan</span>
-              <Dropdown
-                options={CONFIG_OPTIONS}
-                value={filterValue.config}
-                onSelect={handleConfigChange}
-              />
+              <Dropdown options={CONFIG_OPTIONS} value={filterValue.config} onSelect={handleConfigChange} />
 
               {filterValue.config !== 'None' && (
                 <InputSearch

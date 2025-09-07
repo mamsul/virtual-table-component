@@ -3,10 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useOnClickOutside from './use-click-outside';
 import type { TFilterAdvanceConfig } from '../lib';
 
-type IActiveAdvanceFilters<T> = Record<
-  keyof T,
-  { config_name: TFilterAdvanceConfig; value: string }
->;
+type IActiveAdvanceFilters<T> = Record<keyof T, { config_name: TFilterAdvanceConfig; value: string }>;
 
 interface IAdvanceFilterTable<TDataSource> {
   data: TDataSource[];
@@ -20,17 +17,15 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
 
   const filterAdvanceCardRef = useRef<HTMLDivElement | null>(null);
   const [isFilterAdvanceCardOpen, setIsFilterAdvanceCardOpen] = useState({ show: false, key: '' });
-  const [activeAdvanceFilters, setActiveAdvanceFilters] = useState<
-    IActiveAdvanceFilters<TDataSource>
-  >({} as IActiveAdvanceFilters<TDataSource>);
+  const [activeAdvanceFilters, setActiveAdvanceFilters] = useState<IActiveAdvanceFilters<TDataSource>>(
+    {} as IActiveAdvanceFilters<TDataSource>
+  );
 
   useEffect(() => {
     if (isResetFilter) setActiveAdvanceFilters({} as IActiveAdvanceFilters<TDataSource>);
   }, [isResetFilter]);
 
-  useOnClickOutside([filterAdvanceCardRef], () =>
-    setIsFilterAdvanceCardOpen({ show: false, key: '' }),
-  );
+  useOnClickOutside([filterAdvanceCardRef], () => setIsFilterAdvanceCardOpen({ show: false, key: '' }));
 
   const filteredAdvanceData = useMemo(() => {
     if (Object.keys(activeAdvanceFilters).length === 0) return data;
@@ -75,7 +70,7 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
       });
       setIsFilterAdvanceCardOpen({ show: false, key: '' });
     },
-    [onChangeAdvanceFilter],
+    [onChangeAdvanceFilter]
   );
 
   const resetAdvanceFilter = useCallback(
@@ -88,7 +83,7 @@ export default function useFilterAdvance<TDataSource>(props: IAdvanceFilterTable
       });
       setIsFilterAdvanceCardOpen({ show: false, key: '' });
     },
-    [onChangeAdvanceFilter],
+    [onChangeAdvanceFilter]
   );
 
   return {

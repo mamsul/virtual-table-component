@@ -26,6 +26,9 @@ importers:
       react-scroll-sync:
         specifier: ^1.0.2
         version: 1.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-virtualized-auto-sizer:
+        specifier: ^1.0.26
+        version: 1.0.26(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwindcss:
         specifier: ^4.1.10
         version: 4.1.10
@@ -36,6 +39,9 @@ importers:
       '@eslint/js':
         specifier: ^9.25.0
         version: 9.29.0
+      '@faker-js/faker':
+        specifier: ^10.0.0
+        version: 10.0.0
       '@types/react':
         specifier: ^19.1.2
         version: 19.1.8
@@ -343,6 +349,10 @@ packages:
   '@eslint/plugin-kit@0.3.2':
     resolution: {integrity: sha512-4SaFZCNfJqvk/kenHpI8xvN42DMaoycy4PzKc5otHxRswww1kAt82OlBuwRVLofCACCTZEcla2Ydxv8scMXaTg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@10.0.0':
+    resolution: {integrity: sha512-UollFEUkVXutsaP+Vndjxar40Gs5JL2HeLcl8xO1QAjJgOdhc3OmBFWyEylS+RddWaaBiAzH+5/17PLQJwDiLw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1191,6 +1201,12 @@ packages:
       react: 16.x || 17.x || 18.x || 19.x
       react-dom: 16.x || 17.x || 18.x || 19.x
 
+  react-virtualized-auto-sizer@1.0.26:
+    resolution: {integrity: sha512-CblNyiNVw2o+hsa5/49NH2ogGxZ+t+3aweRvNSq7TVjDIlwk7ir4lencEg5HxHeSzwNarSkNkiu0qJSOXtxm5A==}
+    peerDependencies:
+      react: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^15.3.0 || ^16.0.0-alpha || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   react@19.1.0:
     resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
     engines: {node: '>=0.10.0'}
@@ -1598,6 +1614,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.15.0
       levn: 0.4.1
+
+  '@faker-js/faker@10.0.0': {}
 
   '@humanfs/core@0.19.1': {}
 
@@ -2375,6 +2393,11 @@ snapshots:
   react-refresh@0.17.0: {}
 
   react-scroll-sync@1.0.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  react-virtualized-auto-sizer@1.0.26(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)

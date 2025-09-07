@@ -8,15 +8,14 @@ type FlattenedItem<T> = {
 
 export default function useFlattenedDataIncremental<T>(
   data: T[] | undefined,
-  rowKey: keyof T | ((data: T, index: number) => string),
+  rowKey: keyof T | ((data: T, index: number) => string)
 ) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [flattenedData, setFlattenedData] = useState<FlattenedItem<T>[]>([]);
 
   const getRowKey = useCallback(
-    (item: T, index: number) =>
-      typeof rowKey === 'function' ? rowKey(item, index) : String(item[rowKey]),
-    [rowKey],
+    (item: T, index: number) => (typeof rowKey === 'function' ? rowKey(item, index) : String(item[rowKey])),
+    [rowKey]
   );
 
   useEffect(() => {
