@@ -118,7 +118,7 @@ This component uses `react-virtualized-auto-sizer` to automatically adjust the t
 container. This is particularly useful when you want the table to fill the available space dynamically.
 
 ```tsx
-import { VirtualTable } from 'react-virtualized-table';
+import { VirtualTable } from './components/virtual-table';
 
 function App() {
   return (
@@ -138,7 +138,7 @@ function App() {
 ### Basic Example
 
 ```tsx
-import { VirtualTable } from 'react-virtualized-table';
+import { VirtualTable } from './components/virtual-table';
 
 const data = [
   { id: 1, name: 'John Doe', email: 'john@example.com', age: 30 },
