@@ -14,7 +14,7 @@ export interface IUser {
   company?: string;
 }
 
-export const dummyData: IUser[] = Array.from({ length: 500000 }, (_, index) => ({
+export const dummyData: IUser[] = Array.from({ length: 25000 }, (_, index) => ({
   id: index + 1,
   name: faker.person.fullName(),
   email: faker.internet.email(),

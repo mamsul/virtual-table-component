@@ -1,4 +1,4 @@
-# React Virtualized Table 📊
+# Virtual Table Component 📊
 
 A high-performance virtual table component built with React and TanStack Virtual for handling large datasets
 efficiently.
